@@ -1,0 +1,9 @@
+Makefile
+.obj-*
+.moc-*
+*.xcodeproj
+*.sln
+*.vcxproj
+lib
+bin
+
