@@ -1,34 +1,21 @@
-# This will run on Travis' 'new' container-based infrastructure
 sudo: false
 
-# Blacklist
 branches:
-  except:
-    - gh-pages
+  only:
+    - master
 
-# Environment variables
-env:
-  global:
-    - GH_REPO_NAME: ExchangeToolkit
-    - DOXYFILE: $TRAVIS_BUILD_DIR/Build/doc/ExchangeToolkit.config
-    - GH_REPO_REF: github.com/techsoft3d/ExchangeToolkit.git
-
-# Install dependencies
 addons:
   apt:
     packages:
       - doxygen
-      - doxygen-doc
-      - doxygen-latex
-      - doxygen-gui
-      - graphviz
 
-# Build your code e.g. by calling make
 script:
-  - make
+  - doxygen build/doc/ExchangeToolkit.config
 
-# Generate and deploy documentation
-after_success:
-  - cd $TRAVIS_BUILD_DIR
-  - chmod +x generateDocumentationAndDeploy.sh
-  - ./generateDocumentationAndDeploy.sh
+deploy:
+  provider: pages
+  skip_cleanup: true
+  local_dir: ExchangeToolkit/doc/html
+  github_token: $GH_REPO_TOKEN
+  on:
+    branch: master
