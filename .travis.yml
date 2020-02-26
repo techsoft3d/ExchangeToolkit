@@ -10,7 +10,7 @@ addons:
       - doxygen
 
 script:
-  - ./buildDocs.sh
+  - buildDocs.sh
 
 deploy:
   provider: pages
