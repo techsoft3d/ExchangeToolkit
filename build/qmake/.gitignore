@@ -6,4 +6,4 @@ Makefile
 *.vcxproj
 lib
 bin
-
+*/Debug
