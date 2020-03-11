@@ -12,7 +12,8 @@ The Exchange Toolkit is a set of tools (in the ts3d namespace) that make common 
 
 \section section_building Using the Toolkit
 
-Please refer to the [README.md](\ref readme) for usage instructions.
+The toolkit is contained in header files only. To use the toolkit, simply add the desired headers to your project.
+The source repository is hosted on GitHub [here](https://github.com/techsoft3d/ExchangeToolkit).
 
 \section section_traversal Traversal
 
