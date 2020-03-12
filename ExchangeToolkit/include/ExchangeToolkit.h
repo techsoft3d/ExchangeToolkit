@@ -475,9 +475,6 @@ namespace ts3d {
      \c CheckResult
      */
     class CheckResult {
-    private:
-    	CheckResult( void ) {}
-
     public:
         /*! \brief Gets the global instances of the CheckResult object.
          The returned object can be used to examine information about the
