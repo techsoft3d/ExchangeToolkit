@@ -115,6 +115,9 @@ the Exchange data model. They are:
 	objects of the type specified by \c leaf_type. The result is a ts3d::InstancePathArray
 	containing unique paths. The leaf entity object may appear multiple times via differing paths.
 
+	\note The type of the \c owner object is not important. The traversal algorithm will begin
+	at whatever level of the hierarchy you need.
+
 	As an example of how this can be used, imagine you'd like to know the total number of parts
 	in a model file. This would look something like this:
 	\code
@@ -123,9 +126,7 @@ the Exchange data model. They are:
 	\endcode
 	This count would include all instances of shared parts.
 
-	\note The type of the \c owner object is not important. The traversal algorithm will begin
-	at whatever level of the hierarchy you need.
-
+	
 
 -# ts3d::getUniqueLeafEntities( A3DEntity *owner, A3DEEntityType const &leaf_type );
 
@@ -136,8 +137,9 @@ the Exchange data model. They are:
 	As an example of how this can be used, here is a snippet from the [attrib](@ref example_attrib) example. 
 	In this code, \c brep_model is a ts3d::InstancePath containing a leaf object of type \c A3DRiBrepModel.
 	\snippet attrib/main.cpp Getting all faces from an A3DRiBrepModel
-	Internally, the B-Rep model is traversed and all A3DTopoFace objects are gathered and returned in 
-	an unordered set.
+	Internally, the B-Rep model is traversed and all \c A3DTopoFace objects are gathered and returned in 
+	an unordered set. In this sample, we don't need to know the path to each \c A3DTopoFace in order to
+	attach attributes, so this variation of the function is appropriate.
 
 
 -# ts3d::getUniqueLeafEntities( A3DEntity *owner, A3DEEntityType const &leaf_type, InstancePathMap &instance_path_map )
@@ -297,8 +299,8 @@ the assembly hierarchy. At each node of the traversal, you must obtain the node'
 and accumulate the transform with those previously encountered. To further complicate this
 task, \c A3DAsmProductOccurrence objects store their transform in two different ways.
 
-The ts3d::Instance class makes this task easier by provided the function 
-ts3d::Instance::getNetMatrix(). Similarly, there are several attributes whose final (or "net")
+The ts3d::Instance class makes this task easier when used with the function 
+ts3d::getNetMatrix(). Similarly, there are several attributes whose final (or "net")
 values are determined by the path taken through the assembly hierarchy to arrive at a
 particular leaf node.
 
@@ -308,11 +310,11 @@ net attributes from individual parts by writing the following code:
 auto const parts = ts3d::getLeafInstances( loader.m_psModelFile, kA3DTypeAsmPartDefinition );
 for( auto const part_path : parts ) {
 	ts3d::Instance part_instance( part_path );
-	std::cout << "Net Matrix: " << part_instance.getNetMatrix();
+	std::cout << "Net Matrix: " << ts3d::getNetMatrix( part_instance );
 }
 \endcode
 
-\note ts3d::Instance::getNetMatrix() returns a ts3d::MatrixType, which is defined in the
+\note ts3d::getNetMatrix() returns a ts3d::MatrixType, which is defined in the
 \ref eigen_bridge.
 
 \section Arrays
@@ -380,7 +382,7 @@ ts3d::TessFaceDataHelper object for each face.
 
 Refer to this snippet of code extracted from [examples/obj/main.cpp](@ref example_obj) as an 
 example of how this functionality can be used. This code writes the tessellation data to an
-OBJ file. Note the use of ts3d::Instance::getNetShow() and ts3d::Instance::getNetMatrix().
+OBJ file. Note the use of ts3d::Instance::getNetShow() and ts3d::getNetMatrix().
 
 \snippet obj/main.cpp Generate an OBJ file
 
@@ -438,8 +440,9 @@ This function is used in the body of main as follows.
 \sa \ref access_page
 
 \defgroup wrappers Data Access Wrappers
-\brief This is the list of the data access wrappers that are currently implemented. The list can usually
-be easily expanded by simply appending to the list of existing macros found in GetterHelpers.h.
+\brief This is a complete list of data access wrappers. Every object in HOOPS Exchange
+with a typename matching A3D[a-zA-Z0-9]+Data that has a corresponding A3D[a-zA-Z0-9]+Get
+has a wrapper entry below.
 \ingroup access
 
 \defgroup eigen_bridge Eigen Bridge
@@ -598,7 +601,8 @@ struct A3D_VOID_TYPE ## Wrapper { \
     } \
     \
     /*!  \brief Resets internal data to values obtained from the provided pointer. */ \
-    /*!  Calling this function will free dynamic resources as needed prior to obtaining new values in the struct. */ \
+    /*!  Calling this function will free dynamic resources as needed prior to obtaining new values in the struct.
+    If a \c nullptr is provided, the data is not explicitly changed and may reflect old values. */ \
     void reset( A3D_VOID_TYPE *ntt ) { \
         A3D_VOID_TYPE ## Get( nullptr, &_d ); \
         if( ntt ) A3D_VOID_TYPE ## Get( ntt, &_d ); \
@@ -904,7 +908,7 @@ namespace ts3d {
 
     /*! \brief Gets a part definition from a product occurrence, optionally
      * using recursion to query the prototype.
-     * \private
+     * \internal
      */
     static inline A3DAsmPartDefinition *getPartDefinition( A3DAsmProductOccurrence *po, PrototypeOption const &opt = PrototypeOption::Use ) {
         if( nullptr == po ) {
@@ -937,11 +941,11 @@ namespace ts3d {
 }
 
 /*! \brief This is used to indicate _all_ vertex types
- *  \private */
+ *  \internal */
 #define kA3DTypeTopoVertex static_cast<A3DEEntityType>(kA3DTypeTopo + 18)
 
 /*! \brief This is used to indicate _all_ markup types
- *  \private */
+ *  \internal */
 #define kA3DTypeMkpAnnotationEntity static_cast<A3DEEntityType>(kA3DTypeMkp + 7)
 
 
