@@ -102,20 +102,14 @@ namespace ts3d {
 	*  \ingroup eigen_bridge
 	*/
 	static inline MatrixType getMatrix( ts3d::Instance const &i ) {
-		switch(i.leafType()) {
-		case kA3DTypeAsmProductOccurrence:
-			return ts3d::getMatrix( getLocation( i.leaf() ) );
-			break;
-		case kA3DTypeRiRepresentationItem:
-		{
-			A3DRiRepresentationItemWrapper d( i.leaf() );
-			A3DRiCoordinateSystemWrapper csw( d->m_pCoordinateSystem );
-			return  ts3d::getMatrix( csw->m_pTransformation );
-		}
-		break;
-		default:
-			break;
-		}
+		auto const leaf_type = i.leafType();
+        if( kA3DTypeAsmProductOccurrence == leaf_type ) {
+            return ts3d::getMatrix( getLocation( i.leaf() ) );
+        } else if( isRepresentationItem( leaf_type ) ) {
+            A3DRiRepresentationItemWrapper d( i.leaf() );
+            A3DRiCoordinateSystemWrapper csw( d->m_pCoordinateSystem );
+            return  ts3d::getMatrix( csw->m_pTransformation );
+        }
 		return MatrixType::Identity();
 	}
 
