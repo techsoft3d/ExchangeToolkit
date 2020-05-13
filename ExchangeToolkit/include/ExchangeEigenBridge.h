@@ -25,6 +25,18 @@ namespace ts3d {
 	static inline VectorType getVector( A3DVector3dData const &vec ) {
 		return ts3d::VectorType( vec.m_dX, vec.m_dY, vec.m_dZ, 0. );
 	}
+    
+    /*! \brief Use this function to obtain and Exchange Vector from an Eigen vector/position.
+    *  \ingroup eigen_bridge
+    */
+    static inline A3DVector3dData getExchangeVector( Eigen::Vector4d const &vec ) {
+        A3DVector3dData result;
+        A3D_INITIALIZE_DATA( A3DVector3dData, result );
+        result.m_dX = vec(0);
+        result.m_dY = vec(1);
+        result.m_dZ = vec(2);
+        return result;
+    }
 
 	/*! \brief Use this function to obtain a direction.
 	*  \ingroup eigen_bridge
