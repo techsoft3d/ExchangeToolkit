@@ -2361,6 +2361,140 @@ namespace ts3d {
             return nullptr;
         }
     };
+    
+    inline A3DVector3dData zeroVector( void ) {
+        A3DVector3dData result;
+        A3D_INITIALIZE_DATA( A3DVector3dData, result );
+        result.m_dX = result.m_dY = result.m_dZ = 0.;
+        return result;
+
+    }
+    
+    inline A3DVector3dData operator+(A3DVector3dData const &lhs, A3DVector3dData const &rhs ) {
+        A3DVector3dData result;
+        A3D_INITIALIZE_DATA( A3DVector3dData, result );
+        result.m_dX = lhs.m_dX + rhs.m_dX;
+        result.m_dY = lhs.m_dY + rhs.m_dY;
+        result.m_dZ = lhs.m_dZ + rhs.m_dZ;
+        return result;
+    }
+    
+    inline A3DVector3dData &operator+=(A3DVector3dData &lhs, A3DVector3dData const &rhs ) {
+        lhs = lhs + rhs;
+        return lhs;
+    }
+    
+    inline A3DVector3dData operator-(A3DVector3dData const &lhs, A3DVector3dData const &rhs ) {
+        A3DVector3dData result;
+        A3D_INITIALIZE_DATA( A3DVector3dData, result );
+        result.m_dX = lhs.m_dX - rhs.m_dX;
+        result.m_dY = lhs.m_dY - rhs.m_dY;
+        result.m_dZ = lhs.m_dZ - rhs.m_dZ;
+        return result;
+    }
+    
+    inline A3DVector3dData operator-( A3DVector3dData const &lhs ) {
+        A3DVector3dData result;
+        A3D_INITIALIZE_DATA( A3DVector3dData, result );
+        result.m_dX = -lhs.m_dX;
+        result.m_dY = -lhs.m_dY;
+        result.m_dZ = -lhs.m_dZ;
+        return result;
+    }
+
+    inline A3DVector3dData &operator-=(A3DVector3dData &lhs, A3DVector3dData const &rhs ) {
+        lhs = lhs - rhs;
+        return lhs;
+    }
+
+    inline A3DVector3dData operator*(A3DVector3dData const &lhs, double const &rhs ) {
+        A3DVector3dData result;
+        A3D_INITIALIZE_DATA( A3DVector3dData, result );
+        result.m_dX = lhs.m_dX * rhs;
+        result.m_dY = lhs.m_dY * rhs;
+        result.m_dZ = lhs.m_dZ * rhs;
+        return result;
+    }
+
+    inline A3DVector3dData operator*(double const &lhs, A3DVector3dData const &rhs ) {
+        return rhs * lhs;
+    }
+
+    inline A3DVector3dData &operator*=(A3DVector3dData &lhs, double const &rhs ) {
+        lhs.m_dX *= rhs;
+        lhs.m_dY *= rhs;
+        lhs.m_dZ *= rhs;
+        return lhs;
+    }
+    
+    inline A3DVector3dData operator/(A3DVector3dData const &lhs, double const &rhs ) {
+        A3DVector3dData result;
+        A3D_INITIALIZE_DATA( A3DVector3dData, result );
+        result.m_dX = lhs.m_dX / rhs;
+        result.m_dY = lhs.m_dY / rhs;
+        result.m_dZ = lhs.m_dZ / rhs;
+        return result;
+    }
+
+    inline A3DVector3dData &operator/=(A3DVector3dData &lhs, double const &rhs ) {
+        lhs.m_dX /= rhs;
+        lhs.m_dY /= rhs;
+        lhs.m_dZ /= rhs;
+        return lhs;
+    }
+    
+    inline A3DVector3dData cross( A3DVector3dData const &lhs, A3DVector3dData const &rhs ) {
+        A3DVector3dData result;
+        A3D_INITIALIZE_DATA( A3DVector3dData, result );
+        result.m_dX = lhs.m_dY * rhs.m_dZ - lhs.m_dZ * rhs.m_dY;
+        result.m_dY = lhs.m_dZ * rhs.m_dX - lhs.m_dX * rhs.m_dZ;
+        result.m_dZ = lhs.m_dX * rhs.m_dY - lhs.m_dY * rhs.m_dX;
+        return result;
+    }
+
+    inline double dot( A3DVector3dData const &lhs, A3DVector3dData const &rhs ) {
+        return lhs.m_dX * rhs.m_dX + lhs.m_dY * rhs.m_dY + lhs.m_dZ * rhs.m_dZ;
+    }
+    
+    inline double length2( A3DVector3dData const &v ) {
+        return dot( v, v );
+    }
+    
+    inline double length( A3DVector3dData const &v ) {
+        return sqrt( length2( v ) );
+    }
+    
+    inline A3DVector3dData& normalize( A3DVector3dData &v ) {
+        v /= length( v );
+        return v;
+    }
+    
+    inline A3DVector3dData normalized( A3DVector3dData const &v ) {
+        auto result = v;
+        return normalize( result );
+    }
+
+    inline bool operator==(A3DVector3dData const &lhs, A3DVector3dData const &rhs ) {
+        static auto const RESOLUTION = 1.e-9;
+        return length( lhs - rhs ) < RESOLUTION;
+    }
+
+    inline bool operator!=(A3DVector3dData const &lhs, A3DVector3dData const &rhs ) {
+        static auto const RESOLUTION = 1.e-9;
+        return length( lhs - rhs ) > RESOLUTION;
+    }
+    
+    inline A3DBoundingBoxData &include( A3DBoundingBoxData &bb, A3DVector3dData const &pt ) {
+        bb.m_sMin.m_dX = std::min( bb.m_sMin.m_dX, pt.m_dX );
+        bb.m_sMin.m_dY = std::min( bb.m_sMin.m_dY, pt.m_dY );
+        bb.m_sMin.m_dZ = std::min( bb.m_sMin.m_dZ, pt.m_dZ );
+
+        bb.m_sMax.m_dX = std::max( bb.m_sMax.m_dX, pt.m_dX );
+        bb.m_sMax.m_dY = std::max( bb.m_sMax.m_dY, pt.m_dY );
+        bb.m_sMax.m_dZ = std::max( bb.m_sMax.m_dZ, pt.m_dZ );
+        
+        return bb;
+    }
 }
 
 #ifdef _MSC_VER
