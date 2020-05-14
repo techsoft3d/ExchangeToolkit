@@ -1053,6 +1053,16 @@ namespace std {
             return s;
         }
     };
+    template<>  struct hash<ts3d::InstancePath> {
+        size_t operator()(ts3d::InstancePath const &i ) const noexcept {
+            auto seed = i.size();
+            auto const magic_number = reinterpret_cast<size_t>( A3DAsmModelFileGet );
+            for( auto &ntt : i ) {
+                seed ^= reinterpret_cast<size_t>( ntt ) + magic_number + (seed << 6) + (seed >>2 );
+            }
+            return seed;
+        }
+    };
 }
 
 namespace {
@@ -2494,6 +2504,10 @@ namespace ts3d {
         bb.m_sMax.m_dZ = std::max( bb.m_sMax.m_dZ, pt.m_dZ );
         
         return bb;
+    }
+    
+    inline A3DVector3dData center( A3DBoundingBoxData const &bb ) {
+        return bb.m_sMin + (bb.m_sMax - bb.m_sMin) * 0.5;
     }
 }
 
