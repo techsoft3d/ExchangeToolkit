@@ -96,12 +96,12 @@ std::ostream &operator<<(std::ostream &o, A3DVector3dData const &v ) {
 }
     
 
-bool shouldTranslate( A3DVector3dData const &pt, A3DVector3dData const &t ) {
+bool shouldTranslate( A3DVector3dData const &pt ) {
     auto const d = ts3d::length( pt );
     return d > THRESHOLD;
 }
 
-bool shouldTranslateCoordinateSystem( A3DEntity *ntt, A3DVector3dData const &t ) {
+bool shouldTranslateCoordinateSystem( A3DEntity *ntt ) {
     A3DVector3dData ntt_location;
     A3D_INITIALIZE_DATA( A3DVector3dData, ntt_location );
     auto const base_type = getBaseType( ts3d::getEntityType( ntt ) );
@@ -118,7 +118,7 @@ bool shouldTranslateCoordinateSystem( A3DEntity *ntt, A3DVector3dData const &t )
     } else {
         return false;
     }
-    return shouldTranslate( ntt_location, t );
+    return shouldTranslate( ntt_location );
 }
 
 bool translateCoordinateSystem( A3DEntity *ntt, A3DVector3dData const &t ) {
@@ -297,7 +297,7 @@ int main( int argc, char *argv[] ) {
 
             auto translated_cs = false;
             for( auto const ntt : instance_path ) {
-                if( shouldTranslateCoordinateSystem( ntt, offset ) && translateCoordinateSystem( ntt, -offset ) ) {
+                if( shouldTranslateCoordinateSystem( ntt ) && translateCoordinateSystem( ntt, -offset ) ) {
                     std::cout << "- Translated instance path." << std::endl;
                     translated_entities.insert( ntt );
                     translated_cs = true;
