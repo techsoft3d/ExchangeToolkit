@@ -1,4 +1,4 @@
-project_name = template
+project_name = print_materials 
 !include( ../config.pri ) : error( "Unable to include config.pri" )
 TEMPLATE = app
 QT -=  core
