@@ -542,7 +542,8 @@ namespace ts3d {
         std::string _fn;
         A3DStatus _result = A3D_SUCCESS;
         std::function<bool(CheckResult const&)> _failureCallback = [](ts3d::CheckResult const &r ) {
-            std::cerr << "API FAILURE: " << r.fn() << " [" << r.file() << ":" << r.line() << "] == " << r.result() << std::endl;
+            std::string const error_string = A3DMiscGetErrorMsg( r.result() );
+            std::cerr << "API FAILURE: " << r.fn() << " [" << r.file() << ":" << r.line() << "] == " << error_string << "(" << r.result() << ")" << std::endl;
             return false;
         };
 
@@ -1714,12 +1715,11 @@ namespace ts3d {
             
             _path = new_path;
             
-            if( !_cascaded_attribs.empty() ) {
-                for( auto attrib : _cascaded_attribs ) {
-                    A3DMiscCascadedAttributesDelete( attrib );
-                }
-                A3DMiscCascadedAttributesGet( nullptr, &_cascaded_attribs_data );
+            for( auto attrib : _cascaded_attribs ) {
+                A3DMiscCascadedAttributesDelete( attrib );
             }
+            
+            _cascaded_attribs_data.reset( nullptr );
         }
         
         /*! \brief Gets the leaf entity pointer
@@ -1741,32 +1741,32 @@ namespace ts3d {
         /*! \brief Gets the net removed
          */
         bool getNetRemoved( void ) const {
-            return A3D_TRUE == getCascadedAttributesData().m_bRemoved;
+            return A3D_TRUE == getCascadedAttributesData()->m_bRemoved;
         }
 
 
         /*! \brief Gets the net show
          */
         bool getNetShow( void ) const {
-            return A3D_TRUE == getCascadedAttributesData().m_bShow;
+            return A3D_TRUE == getCascadedAttributesData()->m_bShow;
         }
         
         /*! \brief Gets the net style
          */
         A3DGraphStyleData getNetStyle( void ) const {
-            return getCascadedAttributesData().m_sStyle;
+            return getCascadedAttributesData()->m_sStyle;
         }
         
         /*! \brief Gets the net layer
          */
         A3DUns16 getNetLayer( void ) const {
-            return getCascadedAttributesData().m_usLayer;
+            return getCascadedAttributesData()->m_usLayer;
         }
         /**@}*/
 
 	protected:
         /*! \private */
-        A3DMiscCascadedAttributesData const &getCascadedAttributesData( void ) const {
+        A3DMiscCascadedAttributesWrapper const &getCascadedAttributesData( void ) const {
             if( _cascaded_attribs.empty() ) {
                 getCascadedAttributes();
             }
@@ -1777,30 +1777,28 @@ namespace ts3d {
         A3DMiscCascadedAttributes *getCascadedAttributes( void ) const {
             if(_cascaded_attribs.empty() ) {
                 _cascaded_attribs.push_back( nullptr );
-                A3DMiscCascadedAttributesCreate( &_cascaded_attribs.back() );
+                CheckResult( A3DMiscCascadedAttributesCreate( &_cascaded_attribs.back() ) );
                 for( auto ntt : _path ) {
                     if( A3DEntityIsBaseWithGraphicsType( ntt ) ) {
                         auto father = _cascaded_attribs.back();
                         _cascaded_attribs.push_back( nullptr );
-                        A3DMiscCascadedAttributesCreate( &_cascaded_attribs.back() );
-                        A3DMiscCascadedAttributesPush( _cascaded_attribs.back(), ntt, father );
+                        CheckResult( A3DMiscCascadedAttributesCreate( &_cascaded_attribs.back() ) );
+                        CheckResult( A3DMiscCascadedAttributesPush( _cascaded_attribs.back(), ntt, father ) );
                     }
                 }
-                A3D_INITIALIZE_DATA( A3DMiscCascadedAttributesData, _cascaded_attribs_data );
                 if( !_cascaded_attribs.empty() ) {
-                    A3DMiscCascadedAttributesGet( _cascaded_attribs.back(), &_cascaded_attribs_data );
+                    _cascaded_attribs_data.reset( _cascaded_attribs.back() );
                 }
             }
             return _cascaded_attribs.empty() ? nullptr : _cascaded_attribs.back();
         }
         
-    private:
         /*! \private */
         InstancePath _path;
         /*! \private */
         mutable std::vector<A3DMiscCascadedAttributes*> _cascaded_attribs;
         /*! \private */
-        mutable A3DMiscCascadedAttributesData _cascaded_attribs_data;
+        mutable A3DMiscCascadedAttributesWrapper _cascaded_attribs_data;
     };
 
 	/*! \brief Base class for easing access to tessellation data.
@@ -2369,6 +2367,53 @@ namespace ts3d {
                     break;
             }
             return nullptr;
+        }
+        
+        /** @name Net attribute getters */
+        /**@{*/
+        /*! \brief Gets the net removed
+         */
+        bool getNetRemoved( A3DUns32 const face_idx ) const {
+            return A3D_TRUE == getCascadedAttributesData( face_idx )->m_bRemoved;
+        }
+
+
+        /*! \brief Gets the net show
+         */
+        bool getNetShow( A3DUns32 const face_idx ) const {
+            return A3D_TRUE == getCascadedAttributesData( face_idx )->m_bShow;
+        }
+        
+        /*! \brief Gets the net style
+         */
+        A3DGraphStyleData getNetStyle( A3DUns32 const face_idx ) const {
+            return getCascadedAttributesData( face_idx )->m_sStyle;
+        }
+        
+        /*! \brief Gets the net layer
+         */
+        A3DUns16 getNetLayer( A3DUns32 const face_idx ) const {
+            return getCascadedAttributesData( face_idx )->m_usLayer;
+        }
+        /**@}*/
+
+    protected:
+        A3DMiscCascadedAttributesWrapper getCascadedAttributesData( A3DUns32 const face_idx ) const {
+            if( _cascaded_attribs.empty() ) {
+                getCascadedAttributes();
+            }
+
+            auto cascaded_attribs_copy = _cascaded_attribs;
+            auto father = cascaded_attribs_copy.back();
+            cascaded_attribs_copy.push_back( nullptr );
+            CheckResult( A3DMiscCascadedAttributesCreate( &cascaded_attribs_copy.back() ) );
+
+            A3DRiRepresentationItemWrapper d( leaf() );
+            A3DTess3DWrapper tess_d( d->m_pTessBase );
+            CheckResult( A3DMiscCascadedAttributesPushTessFace( cascaded_attribs_copy.back(), leaf(), d->m_pTessBase, &tess_d->m_psFaceTessData[face_idx], face_idx, father ) );
+            auto result = A3DMiscCascadedAttributesWrapper( cascaded_attribs_copy.back() );
+            CheckResult( A3DMiscCascadedAttributesDelete( cascaded_attribs_copy.back() ) );
+            return result;
         }
     };
     
