@@ -337,6 +337,7 @@ json applyingModeToJson( A3DUns32 const &applying_mode ) {
     }
     return j;
 }
+
 void to_json( json &j, A3DGraphTextureDefinitionData const &texture_def_data ) {
     ts3d::A3DMiscCartesianTransformationWrapper cart_d( texture_def_data.m_pOperatorTransfo );
     ts3d::A3DGraphTextureTransformationWrapper tex_transf_d( texture_def_data.m_pTextureTransfo );
@@ -495,7 +496,12 @@ void to_json( json &j, A3DGraphVPicturePatternData const &vpicture_pattern_data 
     }
     
     // to do, next vpicture pattern
-    
+    if( A3D_DEFAULT_PATTERN_INDEX != vpicture_pattern_data.m_uiNextPatternIndex ) {
+        A3DGraphVPicturePatternData next_vpicture_pattern_data;
+        A3D_INITIALIZE_DATA(A3DGraphVPicturePatternData, next_vpicture_pattern_data);
+        CheckResult( A3DGlobalGetGraphVPicturePatternData( vpicture_pattern_data.m_uiNextPatternIndex, &next_vpicture_pattern_data ) );
+        j["next_vpicture_pattern_data"] = json( next_vpicture_pattern_data );
+    }
 }
 
 void to_json( json &j, A3DGraphStyleData const &style_data ) {
@@ -660,39 +666,44 @@ int main( int argc, char *argv[] ) {
     A3DMiscMaterialPropertiesData empty_prop_data;
     A3D_INITIALIZE_DATA( A3DMiscMaterialPropertiesData, empty_prop_data );
 
+    json j;
     ts3d::InstancePathMap instance_path_map;
     auto const rep_items = ts3d::getUniqueLeafEntities( loader.m_psModelFile, kA3DTypeRiRepresentationItem, instance_path_map );
     for( auto ri : rep_items ) {
+        json rep_item_json;
         A3DMiscMaterialPropertiesData material_prop_data;
         A3D_INITIALIZE_DATA( A3DMiscMaterialPropertiesData, material_prop_data );
         CheckResult( A3DMiscGetMaterialProperties( ri, &material_prop_data ) );
         if( material_prop_data != empty_prop_data ) {
-            std::cout << json( material_prop_data ).dump( 4 ) << std::endl;
+            rep_item_json["rep_item_material_prop_data"] = json( material_prop_data );
         }
         
         for( auto instance_path : instance_path_map[ri] ) {
+            json instance_path_json;
             auto part_it = std::find_if( std::begin( instance_path ), std::end( instance_path ), [](A3DEntity *ntt) {
                 return ts3d::getEntityType( ntt ) == kA3DTypeAsmPartDefinition;
             });
             CheckResult( A3DMiscGetMaterialProperties( *part_it, &material_prop_data ) );
             if( material_prop_data != empty_prop_data ) {
-                std::cout << json( material_prop_data ).dump( 4 ) << std::endl;
+                instance_path_json["part_material_prop_data"] = json( material_prop_data );
             }
 
             ts3d::RepresentationItemInstance ri_instance( instance_path );
             auto const instance_net_style = ri_instance.Instance::getNetStyle();
-            std::cout << json( instance_net_style ).dump( 4 );
+            instance_path_json["style"] = json( instance_net_style );
             if( auto tess = std::dynamic_pointer_cast<ts3d::Tess3DInstance>( ri_instance.getTessellation() ) ) {
                 for( auto f_idx = 0u; f_idx < tess->faceSize(); f_idx++ ) {
                     auto face_net_style = ri_instance.getNetStyle( f_idx );
                     if( face_net_style != instance_net_style ) {
-                        std::cout << "Face level override" << std::endl;
-                        std::cout << json( face_net_style ).dump( 4 ) << std::endl;
+                        instance_path_json["face_level_overrides"].push_back( json (face_net_style ) );
                     }
                 }
             }
+            rep_item_json["rep_item_instance_info"].push_back( instance_path_json );
         }
+        j["rep_items"].push_back( rep_item_json );
     }
+    std::cout << j.dump( 4 ) << std::endl;
 	return 0;
 }
 
