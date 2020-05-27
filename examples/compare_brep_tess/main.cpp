@@ -184,18 +184,18 @@ int main( int argc, char *argv[] ) {
                         pt.m_dY = tess3d->coords()[vertex_index + 1] / brep_scale;
                         pt.m_dZ = tess3d->coords()[vertex_index + 2] / brep_scale;
                     
+                        auto min_curve_distance = std::numeric_limits<double>::max();
                         // project the point to the curve
                         A3DUns32 n_solutions = 0u;
                         A3DDouble *parameters = nullptr, *distances = nullptr;
-                        CheckResult( A3DCrvProjectPoint( curve, &pt, &n_solutions, &parameters, &distances ) );
-
-                        auto min_curve_distance = std::numeric_limits<double>::max();
-                        for( auto n_solution = 0u; n_solution < n_solutions; ++n_solution ) {
-                            if( distances[n_solution] < min_curve_distance ) {
-                                min_curve_distance = distances[n_solution];
+                        if( CheckResult( A3DCrvProjectPoint( curve, &pt, &n_solutions, &parameters, &distances ) ) ) {
+                            for( auto n_solution = 0u; n_solution < n_solutions; ++n_solution ) {
+                                if( distances[n_solution] < min_curve_distance ) {
+                                    min_curve_distance = distances[n_solution];
+                                }
                             }
+                            CheckResult( A3DCrvProjectPoint( nullptr, &pt, &n_solutions, &parameters, &distances ) );
                         }
-                        CheckResult( A3DCrvProjectPoint( nullptr, &pt, &n_solutions, &parameters, &distances ) );
                         
                         // check resulting error against tolerance
                         auto const curve_error = min_curve_distance;// * brep_scale;
@@ -204,17 +204,18 @@ int main( int argc, char *argv[] ) {
                             failure_encountered = true;
                         }
                         
+                        auto min_surf_distance = std::numeric_limits<double>::max();
                         // Project the point to the surface
                         A3DVector2dData *face_solutions = nullptr;
-                        A3DSurfProjectPoint( surface, &pt, &n_solutions, &face_solutions, &distances );
-                        auto min_surf_distance = std::numeric_limits<double>::max();
-                        for( auto n_solution = 0u; n_solution < n_solutions; ++n_solution ) {
-                            if( distances[n_solution] < min_surf_distance ) {
-                                min_surf_distance = distances[n_solution];
+                        if( CheckResult( A3DSurfProjectPoint( surface, &pt, &n_solutions, &face_solutions, &distances ) ) ) {
+                            for( auto n_solution = 0u; n_solution < n_solutions; ++n_solution ) {
+                                if( distances[n_solution] < min_surf_distance ) {
+                                    min_surf_distance = distances[n_solution];
+                                }
                             }
+                            CheckResult( A3DSurfProjectPoint( nullptr, &pt, &n_solutions, &face_solutions, &distances ) );
                         }
-                        A3DSurfProjectPoint( nullptr, &pt, &n_solutions, &face_solutions, &distances );
-
+                        
                         // check resulting error against tolerance
                         auto const surface_error = min_surf_distance;// * brep_scale;
                         if( surface_error > TOLERANCE ) {
