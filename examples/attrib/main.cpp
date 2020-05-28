@@ -1,3 +1,7 @@
+#ifdef _MSC_VER
+#define NOMINMAX
+#endif
+
 #define INITIALIZE_A3D_API
 #include "A3DSDKIncludes.h"
 
@@ -18,9 +22,6 @@
 #define __str(s) #s
 
 static std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-
-
-
 
 int main( int argc, char *argv[] ) {
     if( argc < 2 ) {

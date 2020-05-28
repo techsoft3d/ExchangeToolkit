@@ -1,3 +1,7 @@
+#ifdef _MSC_VER
+#define NOMINMAX
+#endif
+
 #define INITIALIZE_A3D_API
 #include "A3DSDKIncludes.h"
 
@@ -20,6 +24,8 @@ using json = nlohmann::json;
 
 #define xstr(s) __str(s)
 #define __str(s) #s
+
+static std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 
 bool operator==(A3DMiscMaterialPropertiesData const &lhs, A3DMiscMaterialPropertiesData const &rhs ) {
     return 0 == memcmp(&lhs, &rhs, sizeof(A3DMiscMaterialPropertiesData) );
@@ -66,7 +72,7 @@ void to_json( json &j, A3DGraphTextureTransformationData const &tex_transf_data 
         { "is_2d", static_cast<bool>(tex_transf_data.m_bIs2D) },
         { "flip_s", static_cast<bool>(tex_transf_data.m_bTextureFlipS) },
         { "flip_t", static_cast<bool>(tex_transf_data.m_bTextureFlipT) },
-        { "matrix", ts3d::toVector( tex_transf_data.m_dMatrix, 16 ) }
+        { "matrix", ts3d::toVector( const_cast<A3DDouble*>(tex_transf_data.m_dMatrix), 16 ) }
     };
 }
 

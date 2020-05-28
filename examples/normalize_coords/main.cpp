@@ -1,3 +1,7 @@
+#ifdef _MSC_VER
+#define NOMINMAX
+#endif
+
 #define INITIALIZE_A3D_API
 #include "A3DSDKIncludes.h"
 
@@ -11,6 +15,7 @@
 
 #ifdef _MSC_VER
 #pragma warning(disable : 4503)
+#define NOMINMAX
 #endif
 
 #include "ExchangeToolkit.h"
