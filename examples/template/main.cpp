@@ -1,3 +1,7 @@
+#ifdef _MSC_VER
+#define NOMINMAX
+#endif
+
 #define INITIALIZE_A3D_API
 #include "A3DSDKIncludes.h"
 
@@ -26,7 +30,7 @@ int main( int argc, char *argv[] ) {
         std::cerr << std::endl;
         std::cerr << "This application reads the specified file. Use this to test, but don't commit." << std::endl;
     };
-    
+
     if( argc != 2 ) {
         usage();
         return -1;
@@ -60,10 +64,10 @@ int main( int argc, char *argv[] ) {
     i.m_sLoadData.m_sGeneral.m_eReadGeomTessMode = kA3DReadGeomOnly;
 
     loader.Import( i );
-    if( nullptr == loader.m_psModelFile ) {
-        std::cerr << "The specified file could not be loaded." << std::endl;
-        return -1;
-    }
-
+	if( nullptr == loader.m_psModelFile ) {
+		std::cerr << "The specified file could not be loaded." << std::endl;
+		return -1;
+	}
+   
 	return 0;
 }

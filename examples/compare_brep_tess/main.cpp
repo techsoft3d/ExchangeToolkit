@@ -1,4 +1,7 @@
+#ifdef _MSC_VER
 #define NOMINMAX
+#endif
+
 #define INITIALIZE_A3D_API
 #include "A3DSDKIncludes.h"
 

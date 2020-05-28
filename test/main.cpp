@@ -1,3 +1,7 @@
+#ifdef _MSC_VER
+#define NOMINMAX
+#endif
+
 #include <locale>
 #include <codecvt>
 #include <string>

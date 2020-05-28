@@ -1,3 +1,7 @@
+#ifdef _MSC_VER
+#define NOMINMAX
+#endif
+
 #define INITIALIZE_A3D_API
 #include "A3DSDKIncludes.h"
 
@@ -101,7 +105,7 @@ int main( int argc, char *argv[] ) {
     auto const ri_instances = ts3d::getLeafInstances( loader.m_psModelFile, kA3DTypeRiRepresentationItem );
     for( auto ri_instance : ri_instances ) {
         ts3d::RepresentationItemInstance const ri( ri_instance );
-        if( !ri.getNetShow() ) {
+        if( !ri.Instance::getNetShow() ) {
             continue;
         }
 
@@ -113,7 +117,7 @@ int main( int argc, char *argv[] ) {
         auto const name = ri.getName();
         obj_file << "o " << name << std::endl;
         
-        auto const net_style = ri.getNetStyle();
+        auto const net_style = ri.Instance::getNetStyle();
         auto const mtl = getMaterial( net_style );
         if( !mtl.empty() ) {
             obj_file << "usemtl " << mtl << std::endl;
