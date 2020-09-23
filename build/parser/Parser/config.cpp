@@ -6,15 +6,8 @@ using json = nlohmann::json;
 #include "util.h"
 #include "config.h"
 
-void ts3d::exchange::parser::readConfigurationFile( std::string const &config_file ) {
-    std::ifstream config_stream( config_file );
-    if( ! config_stream.is_open()) {
-        return;
-    }
-    
-    json j;
-    config_stream >> j;
-    auto const getArrayEntries = [&](std::string const key) {
+namespace {
+    ts3d::StringSet getArrayEntries( json &j, std::string const key) {
         ts3d::StringSet result;
         auto const type_enums_to_ignore = j[key];
         if( type_enums_to_ignore.is_array() ) {
@@ -25,10 +18,42 @@ void ts3d::exchange::parser::readConfigurationFile( std::string const &config_fi
         }
         return result;
     };
-    typeEnumsToIgnore = getArrayEntries("type_enums_to_ignore");
-    wrappersToSkip = getArrayEntries("wrappers_to_skip");
-    fieldsToSkip = getArrayEntries("fields_to_skip");
-    typeEnumsToAssumeExist =  getArrayEntries( "type_enums_to_assume_exist" );
+}
+
+ts3d::exchange::parser::Config &ts3d::exchange::parser::Config::instance() {
+    static Config _instance;
+    return _instance;
+}
+
+bool ts3d::exchange::parser::Config::shouldSkipWrapper(const std::string &exchange_data_struct_spelling) const {
+    return std::end(wrappersToSkip) != wrappersToSkip.find(exchange_data_struct_spelling);
+}
+
+bool ts3d::exchange::parser::Config::shouldSkipField(const std::string &qualified_field_spelling) const {
+    return std::end(fieldsToSkip) != fieldsToSkip.find(qualified_field_spelling);
+}
+
+bool ts3d::exchange::parser::Config::shouldIgnoreTypeEnum(const std::string &type_enum_spelling) const {
+    return std::end(typeEnumsToIgnore) != typeEnumsToIgnore.find(type_enum_spelling);
+}
+
+ts3d::StringSet const &ts3d::exchange::parser::Config::getTypeEnumsToAssumeExist( void ) const {
+    return typeEnumsToAssumeExist;
+}
+
+
+void ts3d::exchange::parser::Config::readConfigurationFile( std::string const &config_file ) {
+    std::ifstream config_stream( config_file );
+    if( ! config_stream.is_open()) {
+        return;
+    }
+    
+    json j;
+    config_stream >> j;
+    typeEnumsToIgnore = getArrayEntries(j, "type_enums_to_ignore");
+    wrappersToSkip = getArrayEntries(j, "wrappers_to_skip");
+    fieldsToSkip = getArrayEntries(j, "fields_to_skip");
+    typeEnumsToAssumeExist =  getArrayEntries(j, "type_enums_to_assume_exist" );
     auto custom_getters = j["custom_getters"];
     for( auto const &entry : custom_getters ) {
         for( auto const &owning_type_entry : entry.items() ) {

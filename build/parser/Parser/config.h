@@ -3,18 +3,29 @@
 #include "util.h"
 
 namespace ts3d { namespace exchange { namespace parser {
-    static StringSet typeEnumsToIgnore;
-    static StringSet wrappersToSkip;
-    static StringSet fieldsToSkip;
-    static StringSet typeEnumsToAssumeExist;
+    class Config {
+    public:
+        static Config &instance();
+        
+        void readConfigurationFile( std::string const &config_file );
 
-    using OwnerTypeSpelling = std::string;
-    using ChildTypeSpelling = std::string;
-    using GetterCode = std::vector<std::string>;
-    using GettersByChildType = std::unordered_map<ChildTypeSpelling, GetterCode>;
-    using CustomGetters = std::unordered_map<OwnerTypeSpelling, GettersByChildType>;
-    static CustomGetters customGetters;
-
-    void readConfigurationFile( std::string const &config_file );
-
+        bool shouldSkipWrapper( std::string const &exchange_data_struct_spelling ) const;
+        bool shouldIgnoreTypeEnum( std::string const &type_enum_spelling ) const;
+        bool shouldSkipField( std::string const &qualified_field_spelling ) const;
+        
+        StringSet const &getTypeEnumsToAssumeExist( void ) const;
+        
+    private:
+        StringSet typeEnumsToIgnore;
+        StringSet wrappersToSkip;
+        StringSet fieldsToSkip;
+        StringSet typeEnumsToAssumeExist;
+        
+        using OwnerTypeSpelling = std::string;
+        using ChildTypeSpelling = std::string;
+        using GetterCode = std::vector<std::string>;
+        using GettersByChildType = std::unordered_map<ChildTypeSpelling, GetterCode>;
+        using CustomGetters = std::unordered_map<OwnerTypeSpelling, GettersByChildType>;
+        CustomGetters customGetters;
+    };
 } } }

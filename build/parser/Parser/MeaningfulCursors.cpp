@@ -21,7 +21,7 @@ ts3d::MeaningfulCursors::MeaningfulCursors( void ) {
 }
 
 void ts3d::MeaningfulCursors::populate(CXCursor cursor) {
-    for( auto const &type_enum_spelling: ts3d::exchange::parser::typeEnumsToAssumeExist ) {
+    for( auto const &type_enum_spelling : exchange::parser::Config::instance().getTypeEnumsToAssumeExist() ) {
         _stringToCursorMap[type_enum_spelling] = clang_getNullCursor();
     }
     
@@ -41,7 +41,7 @@ void ts3d::MeaningfulCursors::populate(CXCursor cursor) {
                 break;
             case CXCursor_EnumConstantDecl:
                 if( std::regex_match( cursor_spelling, parser::getRegex( parser::Category::Type ) ) ) {
-                    if( std::end(ts3d::exchange::parser::typeEnumsToIgnore) == ts3d::exchange::parser::typeEnumsToIgnore.find( cursor_spelling ) ) {
+                    if( !exchange::parser::Config::instance().shouldIgnoreTypeEnum(cursor_spelling) ) {
                         assert( std::end( pMeaningfulCursors->_stringToCursorMap ) == pMeaningfulCursors->_stringToCursorMap.find( cursor_spelling ) );
                         pMeaningfulCursors->_stringToCursorMap[cursor_spelling] = c;
                     }
