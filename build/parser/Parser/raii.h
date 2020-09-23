@@ -6,14 +6,24 @@
 #include <ostream>
 
 namespace ts3d { namespace exchange { namespace parser {
-    namespace raii {
-        struct Entry {
+    class raii {
+    public:
+        static raii &instance( void );
+        
+        std::string codeSpelling( void ) const;
+
+        struct Wrapper {
+            std::string data_type_spelling;
             std::string void_type_spelling;
-            bool has_get;
-            bool has_edit;
-            bool has_create;
-            std::ostream &operator<<( std::ostream &os ) const;
+            std::string initialize_function_spelling;
+            std::string alias_declaration_spelling;
+            std::string wrapper_spelling;
         };
-        std::vector<Entry> get( CXCursor c );
-    }
+
+    private:
+        raii( void );
+        std::vector<Wrapper> _wrappers;
+        
+    };
+    inline bool operator<(raii::Wrapper const &lhs, raii::Wrapper const &rhs ) { return lhs.data_type_spelling < rhs.data_type_spelling; }
 } } }
