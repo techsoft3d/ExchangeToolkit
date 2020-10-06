@@ -11,7 +11,7 @@ addons:
 
 script:
   - ./buildDocs.sh
-  - touch ./build/doc/.nojekyll
+  - touch ./docs/html/.nojekyll
 
 deploy:
   provider: pages
