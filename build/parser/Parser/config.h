@@ -15,6 +15,10 @@ namespace ts3d { namespace exchange { namespace parser {
         
         StringSet const &getTypeEnumsToAssumeExist( void ) const;
         
+        using ArrayFieldSpelling = std::string;
+        using ArraySizeFieldSpelling = std::string;
+        std::unordered_map<ArrayFieldSpelling, ArraySizeFieldSpelling> getArrayAndSizeFieldOverrides( std::string const &data_struct_spelling ) const;
+        
     private:
         StringSet typeEnumsToIgnore;
         StringSet wrappersToSkip;
@@ -27,5 +31,7 @@ namespace ts3d { namespace exchange { namespace parser {
         using GettersByChildType = std::unordered_map<ChildTypeSpelling, GetterCode>;
         using CustomGetters = std::unordered_map<OwnerTypeSpelling, GettersByChildType>;
         CustomGetters customGetters;
+        
+        std::unordered_map<std::string, std::unordered_map<ArrayFieldSpelling, ArraySizeFieldSpelling>>_arrayAndSizeFields;
     };
 } } }

@@ -15,6 +15,7 @@
 		A4EFD66B2466092F000C38E3 /* MeaningfulCursors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A4EFD6692466092F000C38E3 /* MeaningfulCursors.cpp */; };
 		A4EFD66D24661FCB000C38E3 /* traversal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A4EFD66C24661FCB000C38E3 /* traversal.cpp */; };
 		A4EFD67024664321000C38E3 /* wrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A4EFD66E24664321000C38E3 /* wrapper.cpp */; };
+		D36F3DCD252758BF004B92E7 /* csharp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D36F3DCB252758BF004B92E7 /* csharp.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -43,10 +44,12 @@
 		A4C0CF22245EFAD600338090 /* config.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = config.cpp; sourceTree = "<group>"; };
 		A4C0CF24245EFC7400338090 /* raii.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = raii.cpp; sourceTree = "<group>"; };
 		A4EFD6692466092F000C38E3 /* MeaningfulCursors.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MeaningfulCursors.cpp; sourceTree = "<group>"; };
-		A4EFD66A2466092F000C38E3 /* MeaningfulCursors.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MeaningfulCursors.hpp; sourceTree = "<group>"; };
+		A4EFD66A2466092F000C38E3 /* MeaningfulCursors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MeaningfulCursors.h; sourceTree = "<group>"; };
 		A4EFD66C24661FCB000C38E3 /* traversal.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = traversal.cpp; sourceTree = "<group>"; };
 		A4EFD66E24664321000C38E3 /* wrapper.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = wrapper.cpp; sourceTree = "<group>"; };
-		A4EFD66F24664321000C38E3 /* wrapper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = wrapper.hpp; sourceTree = "<group>"; };
+		A4EFD66F24664321000C38E3 /* wrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = wrapper.h; sourceTree = "<group>"; };
+		D36F3DCB252758BF004B92E7 /* csharp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = csharp.cpp; sourceTree = "<group>"; };
+		D36F3DCC252758BF004B92E7 /* csharp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = csharp.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,11 +94,13 @@
 				A4C0CF24245EFC7400338090 /* raii.cpp */,
 				A4C0CF21245EFA5200338090 /* config.h */,
 				A4EFD6692466092F000C38E3 /* MeaningfulCursors.cpp */,
-				A4EFD66A2466092F000C38E3 /* MeaningfulCursors.hpp */,
+				A4EFD66A2466092F000C38E3 /* MeaningfulCursors.h */,
 				A4EFD66E24664321000C38E3 /* wrapper.cpp */,
-				A4EFD66F24664321000C38E3 /* wrapper.hpp */,
+				A4EFD66F24664321000C38E3 /* wrapper.h */,
 				A4A42BC4251B83D000BA5256 /* decomposition.cpp */,
 				A4A42BC5251B83D000BA5256 /* decomposition.h */,
+				D36F3DCB252758BF004B92E7 /* csharp.cpp */,
+				D36F3DCC252758BF004B92E7 /* csharp.h */,
 			);
 			path = Parser;
 			sourceTree = "<group>";
@@ -169,6 +174,7 @@
 				A4EFD66B2466092F000C38E3 /* MeaningfulCursors.cpp in Sources */,
 				A4C0CF23245EFAD600338090 /* config.cpp in Sources */,
 				A4EFD66D24661FCB000C38E3 /* traversal.cpp in Sources */,
+				D36F3DCD252758BF004B92E7 /* csharp.cpp in Sources */,
 				A4C0CF25245EFC7400338090 /* raii.cpp in Sources */,
 				A4EFD67024664321000C38E3 /* wrapper.cpp in Sources */,
 				A4A42BC6251B83D000BA5256 /* decomposition.cpp in Sources */,

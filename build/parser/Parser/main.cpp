@@ -12,17 +12,24 @@
 #include <set>
 #include <regex>
 #include <fstream>
+#include <sstream>
 #include <clang-c/Index.h>
 #include "util.h"
 #include "config.h"
 #include "traversal.h"
-#include "wrapper.hpp"
+#include "wrapper.h"
 #include "raii.h"
-#include "MeaningfulCursors.hpp"
+#include "csharp.h"
+#include "MeaningfulCursors.h"
 
-using namespace ts3d;
+#ifdef __MSVC
+static auto const DIR_SEP = '\\';
+#else
+static auto const DIR_SEP = '/';
+#endif
 
 int main(int argc, const char * argv[]) {
+    
 //    if( argc < 3 ) {
 //        std::cerr << "Usage: parser <exchange dir> <wrapper output file> <getter output file>" << std::endl;
 //        std::cerr << "  <exchange dir>  - specifies a the root folder of HOOPS Exchange" << std::endl;
@@ -35,6 +42,7 @@ int main(int argc, const char * argv[]) {
 //    }
 
     std::string raii_filename, exchange_folder, config_filename;
+    std::string csharp_cpp_filename, csharp_h_filename, csharp_folder;
     for( auto idx = 1u; idx < argc; idx++ ) {
         if( idx + 1 < argc ) {
             std::string const arg = argv[idx];
@@ -44,6 +52,12 @@ int main(int argc, const char * argv[]) {
                 exchange_folder = argv[++idx];
             } else if( arg == "--config" ) {
                 config_filename = argv[++idx];
+            } else if( arg == "--csharp_cpp" ) {
+                csharp_cpp_filename = argv[++idx];
+            } else if( arg == "--csharp_h" ) {
+                csharp_h_filename = argv[++idx];
+            } else if( arg == "--csharp_folder" ) {
+                csharp_folder = argv[++idx];
             }
         }
     }
@@ -67,6 +81,7 @@ int main(int argc, const char * argv[]) {
     if( !config_filename.empty()) {
         ts3d::exchange::parser::Config::instance().readConfigurationFile( config_filename );
     }
+    
     CXIndex index = clang_createIndex(0, 0);
     CXTranslationUnit unit = clang_parseTranslationUnit(
                                                         index,
@@ -79,18 +94,52 @@ int main(int argc, const char * argv[]) {
         return -1;
     }
 
-    MeaningfulCursors::instance().populate( clang_getTranslationUnitCursor( unit ) );
+    // C#
+    {
+        using namespace ts3d::exchange::parser::csharp;
+        if( !csharp_folder.empty() ) {
+            if(! writeEnums( unit, csharp_folder + DIR_SEP + "Enums.cs" ) ) {
+                std::cerr << "Failed to write Enums.cs" << std::endl;
+                return -1;
+            }
+            
+            if( !writeStructs( unit, csharp_folder + DIR_SEP + "Structs.cs" ) ) {
+                std::cerr << "Failed to write Structs.cs" << std::endl;
+                return -1;
+            }
+            
+            if( !writeAPI( unit, csharp_folder + DIR_SEP + "API.cs" ) ) {
+                std::cerr << "Failed to write API.cs" << std::endl;
+                return -1;
+            }
+        }
+        
+        if( !csharp_h_filename.empty() && ! csharp_cpp_filename.empty()) {
+            std::cout << "Writing C# native layer source files." << std::endl;
+            cpp_layer::write(clang_getTranslationUnitCursor( unit ), csharp_h_filename, csharp_cpp_filename);
+            std::cout << "Success." << std::endl;
+        }
+    }
+    
+    
+    ts3d::MeaningfulCursors::instance().populate( clang_getTranslationUnitCursor( unit ) );
 
     if( raii_stream.is_open() ) {
         raii_stream << ts3d::exchange::parser::raii::instance().codeSpelling();
 
     }
+
+    for( auto const &spelling : ts3d::MeaningfulCursors::instance()._stringToCursorMap ) {
+        
+        if( ts3d::exchange::parser::Category::Data != ts3d::exchange::parser::getCategory( spelling.first ) ) {
+            continue;
+        }
+        
+        auto const code_spelling = ts3d::exchange::parser::wrapper::instance().codeSpelling( spelling.second );
+        std::cout << code_spelling;
+    }
+   
     
-//    if( std::regex_match("m_psModel", ts3d::RegExps::SinglePointerField ) ) {
-//        std::cout << "Here";
-//    }
-//
-//
 //
 //    std::cout << ts3d::exchange::parser::raii::instance().codeSpelling();
 //

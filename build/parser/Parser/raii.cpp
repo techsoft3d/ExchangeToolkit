@@ -1,5 +1,5 @@
 #include <sstream>
-#include "MeaningfulCursors.hpp"
+#include "MeaningfulCursors.h"
 #include "util.h"
 #include "config.h"
 #include "raii.h"
@@ -39,7 +39,7 @@ raii::raii( void ) {
         auto const has_edit = meaningfulCursors.hasCursor( edit_spelling );
         e.data_type_spelling = spelling.first;
         e.void_type_spelling = std::string( std::begin( spelling.first ), std::end( spelling.first) - std::string("Data").length() );
-        e.initialize_function_spelling = "inline void InitializeData( " + e.data_type_spelling + " &d ) { A3D_INITIALIZE_DATA( " + e.data_type_spelling + ", d ) }";
+        e.initialize_function_spelling = "static inline void InitializeData( " + e.data_type_spelling + " &d ) { A3D_INITIALIZE_DATA( " + e.data_type_spelling + ", d ) }";
         e.wrapper_spelling = e.void_type_spelling + "Wrapper";
         if( !has_get && !has_create && !has_edit ) {
             e.alias_declaration_spelling = "using " + e.wrapper_spelling + " = Wrapper<" + e.data_type_spelling + ">;";
@@ -56,6 +56,15 @@ raii::raii( void ) {
         }
         _wrappers.insert( std::lower_bound(std::begin( _wrappers ), std::end( _wrappers ), e ), std::move( e ) );
     }
+}
+
+std::string raii::getSpelling( CXCursor a3d_data_struct_cursor ) const {
+    auto const struct_spelling = toString( clang_getTypeSpelling( clang_getCursorType( a3d_data_struct_cursor)));
+    if( struct_spelling.length() < std::string("Data").length() ) {
+        throw std::runtime_error("Incompatible cursor");
+    }
+    auto const void_type_spelling = std::string( std::begin( struct_spelling ), std::end( struct_spelling ) - std::string("Data").length() );
+    return void_type_spelling + "Wrapper";
 }
 
 namespace {
@@ -84,7 +93,8 @@ namespace {
         std::stringstream ss;
         ss << "namespace ts3d { namespace raii {" << std::endl;
         ss << "    template <typename DataType>" << std::endl;
-        ss << "    struct Wrapper {" << std::endl;
+        ss << "    class Wrapper {" << std::endl;
+        ss << "    public:" << std::endl;
         ss << "        Wrapper( void ) {" << std::endl;
         ss << "            InitializeData(_d);" << std::endl;
         ss << "        }" << std::endl;
@@ -114,12 +124,14 @@ namespace {
         ss << "            return &_d;" << std::endl;
         ss << "        }" << std::endl;
         ss << std::endl;
+        ss << "    protected:" << std::endl;
         ss << "        DataType _d;" << std::endl;
         ss << "    };" << std::endl;
         ss << std::endl;
         ss << "    template <typename T> using GetterFcnRef = A3DStatus(*&)(void const*, T*);" << std::endl;
         ss << "    template <typename DataType, GetterFcnRef<DataType> Getter>" << std::endl;
-        ss << "    struct GettableWrapper : Wrapper<DataType> {" << std::endl;
+        ss << "    class GettableWrapper : public Wrapper<DataType> {" << std::endl;
+        ss << "    public:" << std::endl;
         ss << "        GettableWrapper( void *p = nullptr ) : Wrapper<DataType>() {" << std::endl;
         ss << "            if( p ) {" << std::endl;
         ss << "                Getter( p, &this->_d );" << std::endl;
@@ -151,7 +163,8 @@ namespace {
         ss << std::endl;
         ss << "    template <typename T> using CreatorFcnRef = A3DStatus(*&)(T const *, void **);" << std::endl;
         ss << "    template<typename DataType, CreatorFcnRef<DataType> Creator>" << std::endl;
-        ss << "    struct CreateableWrapper : Wrapper<DataType> {" << std::endl;
+        ss << "    class CreateableWrapper : public Wrapper<DataType> {" << std::endl;
+        ss << "    public:" << std::endl;
         ss << "        void *create( void ) const {" << std::endl;
         ss << "            void *p = nullptr;" << std::endl;
         ss << "            Creator( &this->_d, &p );" << std::endl;
@@ -160,7 +173,8 @@ namespace {
         ss << "    };" << std::endl;
         ss << std::endl;
         ss << "    template <typename DataType, GetterFcnRef<DataType> Getter, CreatorFcnRef<DataType> Creator>" << std::endl;
-        ss << "    struct CreateableGettableWrapper : Wrapper<DataType> {" << std::endl;
+        ss << "    class CreateableGettableWrapper : public Wrapper<DataType> {" << std::endl;
+        ss << "    public:" << std::endl;
         ss << "        CreateableGettableWrapper( void *p = nullptr ) : Wrapper<DataType>() {" << std::endl;
         ss << "            if( p ) {" << std::endl;
         ss << "                Getter( p, &this->_d );" << std::endl;
@@ -198,7 +212,8 @@ namespace {
         ss << std::endl;
         ss << "    template <typename T> using EditorFcnRef = A3DStatus(*&)(T const *, void*);" << std::endl;
         ss << "    template <typename DataType, GetterFcnRef<DataType> Getter, CreatorFcnRef<DataType> Creator, EditorFcnRef<DataType> Editor>" << std::endl;
-        ss << "    struct CreateableGettableEditableWrapper : Wrapper<DataType> {" << std::endl;
+        ss << "    class CreateableGettableEditableWrapper : public Wrapper<DataType> {" << std::endl;
+        ss << "    public:" << std::endl;
         ss << "        CreateableGettableEditableWrapper( void *p = nullptr ) : Wrapper<DataType>() {" << std::endl;
         ss << "            if( p ) {" << std::endl;
         ss << "                Getter( p, &this->_d );" << std::endl;

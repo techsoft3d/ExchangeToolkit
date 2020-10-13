@@ -8,7 +8,7 @@
 
 #include "config.h"
 #include "util.h"
-#include "MeaningfulCursors.hpp"
+#include "MeaningfulCursors.h"
 
 using namespace ts3d::exchange;
 
@@ -44,6 +44,7 @@ void ts3d::MeaningfulCursors::populate(CXCursor cursor) {
                     if( !exchange::parser::Config::instance().shouldIgnoreTypeEnum(cursor_spelling) ) {
                         assert( std::end( pMeaningfulCursors->_stringToCursorMap ) == pMeaningfulCursors->_stringToCursorMap.find( cursor_spelling ) );
                         pMeaningfulCursors->_stringToCursorMap[cursor_spelling] = c;
+                        dump(c);
                     }
                     return CXChildVisit_Continue;
                 }

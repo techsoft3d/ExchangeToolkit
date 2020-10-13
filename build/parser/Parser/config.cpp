@@ -20,25 +20,32 @@ namespace {
     };
 }
 
-ts3d::exchange::parser::Config &ts3d::exchange::parser::Config::instance() {
+using namespace ts3d::exchange::parser;
+
+Config &Config::instance() {
     static Config _instance;
     return _instance;
 }
 
-bool ts3d::exchange::parser::Config::shouldSkipWrapper(const std::string &exchange_data_struct_spelling) const {
+bool Config::shouldSkipWrapper(const std::string &exchange_data_struct_spelling) const {
     return std::end(wrappersToSkip) != wrappersToSkip.find(exchange_data_struct_spelling);
 }
 
-bool ts3d::exchange::parser::Config::shouldSkipField(const std::string &qualified_field_spelling) const {
+bool Config::shouldSkipField(const std::string &qualified_field_spelling) const {
     return std::end(fieldsToSkip) != fieldsToSkip.find(qualified_field_spelling);
 }
 
-bool ts3d::exchange::parser::Config::shouldIgnoreTypeEnum(const std::string &type_enum_spelling) const {
+bool Config::shouldIgnoreTypeEnum(const std::string &type_enum_spelling) const {
     return std::end(typeEnumsToIgnore) != typeEnumsToIgnore.find(type_enum_spelling);
 }
 
-ts3d::StringSet const &ts3d::exchange::parser::Config::getTypeEnumsToAssumeExist( void ) const {
+ts3d::StringSet const &Config::getTypeEnumsToAssumeExist( void ) const {
     return typeEnumsToAssumeExist;
+}
+
+std::unordered_map<Config::ArrayFieldSpelling, Config::ArraySizeFieldSpelling> Config::getArrayAndSizeFieldOverrides( std::string const &data_struct_spelling ) const {
+    auto const it = _arrayAndSizeFields.find( data_struct_spelling );
+    return it == std::end( _arrayAndSizeFields ) ? std::unordered_map<Config::ArrayFieldSpelling, Config::ArraySizeFieldSpelling>() : it->second;
 }
 
 
@@ -54,6 +61,48 @@ void ts3d::exchange::parser::Config::readConfigurationFile( std::string const &c
     wrappersToSkip = getArrayEntries(j, "wrappers_to_skip");
     fieldsToSkip = getArrayEntries(j, "fields_to_skip");
     typeEnumsToAssumeExist =  getArrayEntries(j, "type_enums_to_assume_exist" );
+    
+    
+    /*
+     "array_sizes" : [
+         {
+             "A3DRootBaseData" : [
+                 {
+                     "m_ppAttributes" : "m_usSize"
+                 }
+             ]
+         }
+     ],
+     */
+    auto array_sizes = j["array_sizes"];
+    for( auto const &array_size_entry : array_sizes ) {
+        for( auto const &owning_type_entry : array_size_entry.items() ) {
+            auto const owning_type_spelling = owning_type_entry.key();
+            for( auto const &pair_object : owning_type_entry.value() ) {
+                for( auto const &pair_object_item : pair_object.items() ) {
+                    auto const array_field_spelling = pair_object_item.key();
+                    auto const array_size_field_spelling = pair_object_item.value();
+                    _arrayAndSizeFields[owning_type_spelling][array_field_spelling] = array_size_field_spelling;
+                }
+            }
+        }
+    }
+    
+    /*
+     "custom_getters" : [
+        {
+            "kA3DTypeAsmProductOccurrence" : [
+                {
+                    "kA3DTypeAsmPartDefinition" : [
+                        "auto const part_definition = getPartDefinition( ntt, PrototypeOption::Use );",
+                        "return nullptr == part_definition ? EntityArray() : EntityArray( 1, part_definition );"
+                    ]
+                }
+            ]
+        }
+    ]
+    */
+    
     auto custom_getters = j["custom_getters"];
     for( auto const &entry : custom_getters ) {
         for( auto const &owning_type_entry : entry.items() ) {

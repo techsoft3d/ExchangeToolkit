@@ -19,6 +19,8 @@ namespace ts3d { namespace exchange { namespace parser {
             std::string alias_declaration_spelling;
             std::string wrapper_spelling;
         };
+        
+        std::string getSpelling( CXCursor a3d_data_struct_cursor ) const;
 
     private:
         raii( void );
