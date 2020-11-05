@@ -94,10 +94,13 @@ int main(int argc, const char * argv[]) {
         return -1;
     }
 
+    ts3d::MeaningfulCursors::instance().populate( clang_getTranslationUnitCursor( unit ) );
+
     // C#
     {
         using namespace ts3d::exchange::parser::csharp;
         if( !csharp_folder.empty() ) {
+            using namespace direct;
             if(! writeEnums( unit, csharp_folder + DIR_SEP + "Enums.cs" ) ) {
                 std::cerr << "Failed to write Enums.cs" << std::endl;
                 return -1;
@@ -112,17 +115,26 @@ int main(int argc, const char * argv[]) {
                 std::cerr << "Failed to write API.cs" << std::endl;
                 return -1;
             }
+            
+//            if( !writeStructSizeTests( unit, csharp_folder + DIR_SEP + "StructTests.cs" ) ) {
+//                std::cerr << "Failed to write StructTests.cs" << std::endl;
+//                return -1;
+//            }
+
+            if( !writeClasses( unit, csharp_folder + DIR_SEP + "Classes.cs" ) ) {
+                std::cerr << "Failed to write StructTests.cs" << std::endl;
+                return -1;
+            }
         }
         
-        if( !csharp_h_filename.empty() && ! csharp_cpp_filename.empty()) {
-            std::cout << "Writing C# native layer source files." << std::endl;
-            cpp_layer::write(clang_getTranslationUnitCursor( unit ), csharp_h_filename, csharp_cpp_filename);
-            std::cout << "Success." << std::endl;
-        }
+//        if( !csharp_h_filename.empty() && ! csharp_cpp_filename.empty()) {
+//            std::cout << "Writing C# native layer source files." << std::endl;
+//            cpp_layer::write( unit, csharp_h_filename, csharp_cpp_filename);
+//            std::cout << "Success." << std::endl;
+//        }
     }
     
     
-    ts3d::MeaningfulCursors::instance().populate( clang_getTranslationUnitCursor( unit ) );
 
     if( raii_stream.is_open() ) {
         raii_stream << ts3d::exchange::parser::raii::instance().codeSpelling();

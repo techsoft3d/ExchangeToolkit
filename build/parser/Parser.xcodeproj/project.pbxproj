@@ -301,6 +301,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/clang/include,
+					/usr/local/llvm/include,
+				);
 				LD_RUNPATH_SEARCH_PATHS = /usr/local/clang/lib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -310,6 +314,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/clang/include,
+					/usr/local/llvm/include,
+				);
 				LD_RUNPATH_SEARCH_PATHS = /usr/local/clang/lib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
