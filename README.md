@@ -24,7 +24,7 @@ How to Build the Samples (optional)
 
 * Building on Mac/Linux
   * Edit the file ExchangeToolkit/build/qmake/config.pri
-  * Update the HOOPS_EXCHANGE_DIR and HOOPS_VISUALIZE_DIR variables to point to your installations
+  * Update the HOOPS_EXCHANGE_PATH and HOOPS_VISUALIZE_PATH variables to point to your installations
      ** BE SURE TO USE FORWARD SLASHES
   * Save the file and run qmake
   * Run make
