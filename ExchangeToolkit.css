@@ -1,0 +1,16 @@
+div.image img[src="ExchangeDataModel.png"] {
+	width:400px;
+}
+
+div.image img[src="ExchangeHierarchy.png"] {
+	width:400px;
+}
+
+div.image img[src="InstancePath.png"] {
+	width:400px;
+}
+
+div.fragment {
+	background-color: #FFFEE5;
+	border: 2px solid #FCD585
+}
