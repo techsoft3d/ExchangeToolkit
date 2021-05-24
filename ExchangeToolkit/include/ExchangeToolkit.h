@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 /*! \mainpage Easing Exchange Data Access
 
 The Exchange Toolkit is a set of tools (in the ts3d namespace) that make common workflows easier, including
@@ -786,7 +787,7 @@ namespace ts3d {
 }
 
 namespace {
-    std::pair<A3DBool, double> getUnitFromPO( A3DAsmProductOccurrence *po ) {
+    inline std::pair<A3DBool, double> getUnitFromPO( A3DAsmProductOccurrence *po ) {
         if( nullptr == po ) {
             return std::make_pair(static_cast<A3DBool>( false ), 0. );
         }
@@ -800,7 +801,7 @@ namespace {
         return std::make_pair( d->m_bUnitFromCAD, d->m_dUnit );
     }
     
-    double getUnitFactor( std::vector<A3DAsmProductOccurrence*> const &pos ) {
+    inline double getUnitFactor( std::vector<A3DAsmProductOccurrence*> const &pos ) {
         for( auto po : pos ) {
             auto po_unit = getUnitFromPO( po );
             if(po_unit.first) {
@@ -1591,8 +1592,8 @@ namespace {
 
         auto const t = ts3d::getEntityType( ntt );
         if( kA3DTypeAsmProductOccurrence == t ) {
-            ts3d::A3DAsmProductOccurrenceWrapper d( ntt );
-            return getName( d->m_pPrototype );
+            ts3d::A3DAsmProductOccurrenceWrapper po_d( ntt );
+            return getName( po_d->m_pPrototype );
         }
         
         return std::string();
@@ -2535,18 +2536,27 @@ namespace ts3d {
     }
 
     inline bool operator!=(A3DVector3dData const &lhs, A3DVector3dData const &rhs ) {
-        static auto const RESOLUTION = 1.e-9;
-        return length( lhs - rhs ) > RESOLUTION;
+        return !(lhs == rhs);
+    }
+
+    template<typename T>
+    T ts3d_min(T const& lhs, T const& rhs) {
+        return lhs < rhs ? lhs : rhs;
+    }
+
+    template<typename T>
+    T ts3d_max(T const& lhs, T const& rhs) {
+        return lhs > rhs ? lhs : rhs;
     }
     
     inline A3DBoundingBoxData &include( A3DBoundingBoxData &bb, A3DVector3dData const &pt ) {
-        bb.m_sMin.m_dX = std::min( bb.m_sMin.m_dX, pt.m_dX );
-        bb.m_sMin.m_dY = std::min( bb.m_sMin.m_dY, pt.m_dY );
-        bb.m_sMin.m_dZ = std::min( bb.m_sMin.m_dZ, pt.m_dZ );
+        bb.m_sMin.m_dX = ts3d_min( bb.m_sMin.m_dX, pt.m_dX );
+        bb.m_sMin.m_dY = ts3d_min( bb.m_sMin.m_dY, pt.m_dY );
+        bb.m_sMin.m_dZ = ts3d_min( bb.m_sMin.m_dZ, pt.m_dZ );
 
-        bb.m_sMax.m_dX = std::max( bb.m_sMax.m_dX, pt.m_dX );
-        bb.m_sMax.m_dY = std::max( bb.m_sMax.m_dY, pt.m_dY );
-        bb.m_sMax.m_dZ = std::max( bb.m_sMax.m_dZ, pt.m_dZ );
+        bb.m_sMax.m_dX = ts3d_max( bb.m_sMax.m_dX, pt.m_dX );
+        bb.m_sMax.m_dY = ts3d_max( bb.m_sMax.m_dY, pt.m_dY );
+        bb.m_sMax.m_dZ = ts3d_max( bb.m_sMax.m_dZ, pt.m_dZ );
         
         return bb;
     }
