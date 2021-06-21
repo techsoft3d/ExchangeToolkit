@@ -2541,13 +2541,14 @@ namespace ts3d {
     }
     
     inline A3DBoundingBoxData &include( A3DBoundingBoxData &bb, A3DVector3dData const &pt ) {
-        bb.m_sMin.m_dX = std::min( bb.m_sMin.m_dX, pt.m_dX );
-        bb.m_sMin.m_dY = std::min( bb.m_sMin.m_dY, pt.m_dY );
-        bb.m_sMin.m_dZ = std::min( bb.m_sMin.m_dZ, pt.m_dZ );
+        using namespace std;
+        bb.m_sMin.m_dX = min( bb.m_sMin.m_dX, pt.m_dX );
+        bb.m_sMin.m_dY = min( bb.m_sMin.m_dY, pt.m_dY );
+        bb.m_sMin.m_dZ = min( bb.m_sMin.m_dZ, pt.m_dZ );
 
-        bb.m_sMax.m_dX = std::max( bb.m_sMax.m_dX, pt.m_dX );
-        bb.m_sMax.m_dY = std::max( bb.m_sMax.m_dY, pt.m_dY );
-        bb.m_sMax.m_dZ = std::max( bb.m_sMax.m_dZ, pt.m_dZ );
+        bb.m_sMax.m_dX = max( bb.m_sMax.m_dX, pt.m_dX );
+        bb.m_sMax.m_dY = max( bb.m_sMax.m_dY, pt.m_dY );
+        bb.m_sMax.m_dZ = max( bb.m_sMax.m_dZ, pt.m_dZ );
         
         return bb;
     }
