@@ -460,6 +460,7 @@ has a wrapper entry below.
 #include <memory>
 #include <algorithm>
 #include <iterator>
+#include <iostream>
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -1591,8 +1592,8 @@ namespace {
 
         auto const t = ts3d::getEntityType( ntt );
         if( kA3DTypeAsmProductOccurrence == t ) {
-            ts3d::A3DAsmProductOccurrenceWrapper d( ntt );
-            return getName( d->m_pPrototype );
+            ts3d::A3DAsmProductOccurrenceWrapper d2( ntt );
+            return getName( d2->m_pPrototype );
         }
         
         return std::string();
