@@ -801,6 +801,8 @@ namespace {
         return std::make_pair( d->m_bUnitFromCAD, d->m_dUnit );
     }
     
+#pragma warning(push)
+#pragma warning(disable: 4702)    
     double getUnitFactor( std::vector<A3DAsmProductOccurrence*> const &pos ) {
         for( auto po : pos ) {
             auto po_unit = getUnitFromPO( po );
@@ -814,6 +816,7 @@ namespace {
         }
         return -1.;
     }
+#pragma warning(pop)
 }
 
 namespace ts3d {
