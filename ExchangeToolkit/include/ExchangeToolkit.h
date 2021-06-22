@@ -460,6 +460,7 @@ has a wrapper entry below.
 #include <memory>
 #include <algorithm>
 #include <iterator>
+#include <iostream>
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -800,6 +801,8 @@ namespace {
         return std::make_pair( d->m_bUnitFromCAD, d->m_dUnit );
     }
     
+#pragma warning(push)
+#pragma warning(disable: 4702)    
     double getUnitFactor( std::vector<A3DAsmProductOccurrence*> const &pos ) {
         for( auto po : pos ) {
             auto po_unit = getUnitFromPO( po );
@@ -813,6 +816,7 @@ namespace {
         }
         return -1.;
     }
+#pragma warning(pop)
 }
 
 namespace ts3d {
@@ -1591,8 +1595,8 @@ namespace {
 
         auto const t = ts3d::getEntityType( ntt );
         if( kA3DTypeAsmProductOccurrence == t ) {
-            ts3d::A3DAsmProductOccurrenceWrapper d( ntt );
-            return getName( d->m_pPrototype );
+            ts3d::A3DAsmProductOccurrenceWrapper d2( ntt );
+            return getName( d2->m_pPrototype );
         }
         
         return std::string();
@@ -2540,13 +2544,14 @@ namespace ts3d {
     }
     
     inline A3DBoundingBoxData &include( A3DBoundingBoxData &bb, A3DVector3dData const &pt ) {
-        bb.m_sMin.m_dX = std::min( bb.m_sMin.m_dX, pt.m_dX );
-        bb.m_sMin.m_dY = std::min( bb.m_sMin.m_dY, pt.m_dY );
-        bb.m_sMin.m_dZ = std::min( bb.m_sMin.m_dZ, pt.m_dZ );
+        using namespace std;
+        bb.m_sMin.m_dX = min( bb.m_sMin.m_dX, pt.m_dX );
+        bb.m_sMin.m_dY = min( bb.m_sMin.m_dY, pt.m_dY );
+        bb.m_sMin.m_dZ = min( bb.m_sMin.m_dZ, pt.m_dZ );
 
-        bb.m_sMax.m_dX = std::max( bb.m_sMax.m_dX, pt.m_dX );
-        bb.m_sMax.m_dY = std::max( bb.m_sMax.m_dY, pt.m_dY );
-        bb.m_sMax.m_dZ = std::max( bb.m_sMax.m_dZ, pt.m_dZ );
+        bb.m_sMax.m_dX = max( bb.m_sMax.m_dX, pt.m_dX );
+        bb.m_sMax.m_dY = max( bb.m_sMax.m_dY, pt.m_dY );
+        bb.m_sMax.m_dZ = max( bb.m_sMax.m_dZ, pt.m_dZ );
         
         return bb;
     }
