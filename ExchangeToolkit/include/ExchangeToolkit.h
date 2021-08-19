@@ -1901,10 +1901,10 @@ namespace ts3d {
                         
                         _normals.push_back( current_n );
                         _vertices.push_back( current_v );
-                        _normals.push_back( vert % 2 ? next_n : prev_n );
-                        _vertices.push_back( vert % 2 ? next_v : prev_v );
-                        _normals.push_back( vert % 2 ? prev_n : next_n );
-                        _vertices.push_back( vert % 2 ? prev_v : next_v );
+                        _normals.push_back( (vert % 2) ? next_n : prev_n );
+                        _vertices.push_back( (vert % 2) ? next_v : prev_v );
+                        _normals.push_back( (vert % 2) ? prev_n : next_n );
+                        _vertices.push_back( (vert % 2) ? prev_v : next_v );
                     }
                     ti_index += 2;
                 }
@@ -1963,10 +1963,10 @@ namespace ts3d {
                         
                         _normals.push_back( current_n );
                         _vertices.push_back( current_v );
-                        _normals.push_back( vert % 2 ? next_n : prev_n );
-                        _vertices.push_back( vert % 2 ? next_v : prev_v );
-                        _normals.push_back( vert % 2 ? prev_n : next_n );
-                        _vertices.push_back( vert % 2 ? prev_v : next_v );
+                        _normals.push_back( (vert % 2) ? next_n : prev_n );
+                        _vertices.push_back( (vert % 2) ? next_v : prev_v );
+                        _normals.push_back( (vert % 2) ? prev_n : next_n );
+                        _vertices.push_back( (vert % 2) ? prev_v : next_v );
                     }
                     ti_index += (has_vertex_normals ? 2 : 1);
                 }
@@ -2042,13 +2042,13 @@ namespace ts3d {
                         _texture.insert( _texture.end(), current_t.begin(), current_t.end() );
                         _vertices.push_back( current_v );
                         
-                        _normals.push_back( vert % 2 ? next_n : prev_n );
-                        _texture.insert( _texture.end(), vert % 2 ? next_t.begin() : prev_t.begin(), vert % 2 ? next_t.end() : prev_t.end() );
-                        _vertices.push_back( vert % 2 ? next_v : prev_v );
+                        _normals.push_back( (vert % 2) ? next_n : prev_n );
+                        _texture.insert( _texture.end(), (vert % 2) ? next_t.begin() : prev_t.begin(), (vert % 2) ? next_t.end() : prev_t.end() );
+                        _vertices.push_back( (vert % 2) ? next_v : prev_v );
                         
-                        _normals.push_back( vert % 2 ? prev_n : next_n );
-                        _texture.insert( _texture.end(), vert % 2 ? prev_t.begin() : next_t.begin(), vert % 2 ? prev_t.end() : next_t.end() );
-                        _vertices.push_back( vert % 2 ? prev_v : next_v );
+                        _normals.push_back( (vert % 2) ? prev_n : next_n );
+                        _texture.insert( _texture.end(), (vert % 2) ? prev_t.begin() : next_t.begin(), (vert % 2) ? prev_t.end() : next_t.end() );
+                        _vertices.push_back( (vert % 2) ? prev_v : next_v );
                     }
                 }
             }
@@ -2117,10 +2117,10 @@ namespace ts3d {
                         
                         _normals.push_back( current_n );
                         _vertices.push_back( current_v );
-                        _normals.push_back( vert % 2 ? next_n : prev_n );
-                        _vertices.push_back( vert % 2 ? next_v : prev_v );
-                        _normals.push_back( vert % 2 ? prev_n : next_n );
-                        _vertices.push_back( vert % 2 ? prev_v : next_v );
+                        _normals.push_back( (vert % 2) ? next_n : prev_n );
+                        _vertices.push_back( (vert % 2) ? next_v : prev_v );
+                        _normals.push_back( (vert % 2) ? prev_n : next_n );
+                        _vertices.push_back( (vert % 2) ? prev_v : next_v );
                     }
                 }
             }
