@@ -9,6 +9,13 @@
 /* Begin PBXBuildFile section */
 		A49E259324119911009F2A9C /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A49E259224119911009F2A9C /* main.cpp */; };
 		A49E259B24119A88009F2A9C /* libclang.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A49E259A24119A88009F2A9C /* libclang.dylib */; };
+		A4A42BC6251B83D000BA5256 /* decomposition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A4A42BC4251B83D000BA5256 /* decomposition.cpp */; };
+		A4C0CF23245EFAD600338090 /* config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A4C0CF22245EFAD600338090 /* config.cpp */; };
+		A4C0CF25245EFC7400338090 /* raii.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A4C0CF24245EFC7400338090 /* raii.cpp */; };
+		A4EFD66B2466092F000C38E3 /* MeaningfulCursors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A4EFD6692466092F000C38E3 /* MeaningfulCursors.cpp */; };
+		A4EFD66D24661FCB000C38E3 /* traversal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A4EFD66C24661FCB000C38E3 /* traversal.cpp */; };
+		A4EFD67024664321000C38E3 /* wrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A4EFD66E24664321000C38E3 /* wrapper.cpp */; };
+		D36F3DCD252758BF004B92E7 /* csharp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D36F3DCB252758BF004B92E7 /* csharp.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -27,6 +34,22 @@
 		A49E258F24119911009F2A9C /* Parser */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Parser; sourceTree = BUILT_PRODUCTS_DIR; };
 		A49E259224119911009F2A9C /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		A49E259A24119A88009F2A9C /* libclang.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libclang.dylib; path = ../../../../../../../usr/local/clang/lib/libclang.dylib; sourceTree = "<group>"; };
+		A4A42BC4251B83D000BA5256 /* decomposition.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = decomposition.cpp; sourceTree = "<group>"; };
+		A4A42BC5251B83D000BA5256 /* decomposition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = decomposition.h; sourceTree = "<group>"; };
+		A4C0CF1D245EEB9B00338090 /* util.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
+		A4C0CF1E245EF9BB00338090 /* cpp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cpp.h; sourceTree = "<group>"; };
+		A4C0CF1F245EF9CD00338090 /* traversal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = traversal.h; sourceTree = "<group>"; };
+		A4C0CF20245EF9D200338090 /* raii.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = raii.h; sourceTree = "<group>"; };
+		A4C0CF21245EFA5200338090 /* config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
+		A4C0CF22245EFAD600338090 /* config.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = config.cpp; sourceTree = "<group>"; };
+		A4C0CF24245EFC7400338090 /* raii.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = raii.cpp; sourceTree = "<group>"; };
+		A4EFD6692466092F000C38E3 /* MeaningfulCursors.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MeaningfulCursors.cpp; sourceTree = "<group>"; };
+		A4EFD66A2466092F000C38E3 /* MeaningfulCursors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MeaningfulCursors.h; sourceTree = "<group>"; };
+		A4EFD66C24661FCB000C38E3 /* traversal.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = traversal.cpp; sourceTree = "<group>"; };
+		A4EFD66E24664321000C38E3 /* wrapper.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = wrapper.cpp; sourceTree = "<group>"; };
+		A4EFD66F24664321000C38E3 /* wrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = wrapper.h; sourceTree = "<group>"; };
+		D36F3DCB252758BF004B92E7 /* csharp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = csharp.cpp; sourceTree = "<group>"; };
+		D36F3DCC252758BF004B92E7 /* csharp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = csharp.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +85,22 @@
 			isa = PBXGroup;
 			children = (
 				A49E259224119911009F2A9C /* main.cpp */,
+				A4C0CF22245EFAD600338090 /* config.cpp */,
+				A4C0CF1D245EEB9B00338090 /* util.h */,
+				A4C0CF1E245EF9BB00338090 /* cpp.h */,
+				A4C0CF1F245EF9CD00338090 /* traversal.h */,
+				A4EFD66C24661FCB000C38E3 /* traversal.cpp */,
+				A4C0CF20245EF9D200338090 /* raii.h */,
+				A4C0CF24245EFC7400338090 /* raii.cpp */,
+				A4C0CF21245EFA5200338090 /* config.h */,
+				A4EFD6692466092F000C38E3 /* MeaningfulCursors.cpp */,
+				A4EFD66A2466092F000C38E3 /* MeaningfulCursors.h */,
+				A4EFD66E24664321000C38E3 /* wrapper.cpp */,
+				A4EFD66F24664321000C38E3 /* wrapper.h */,
+				A4A42BC4251B83D000BA5256 /* decomposition.cpp */,
+				A4A42BC5251B83D000BA5256 /* decomposition.h */,
+				D36F3DCB252758BF004B92E7 /* csharp.cpp */,
+				D36F3DCC252758BF004B92E7 /* csharp.h */,
 			);
 			path = Parser;
 			sourceTree = "<group>";
@@ -132,6 +171,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				A49E259324119911009F2A9C /* main.cpp in Sources */,
+				A4EFD66B2466092F000C38E3 /* MeaningfulCursors.cpp in Sources */,
+				A4C0CF23245EFAD600338090 /* config.cpp in Sources */,
+				A4EFD66D24661FCB000C38E3 /* traversal.cpp in Sources */,
+				D36F3DCD252758BF004B92E7 /* csharp.cpp in Sources */,
+				A4C0CF25245EFC7400338090 /* raii.cpp in Sources */,
+				A4EFD67024664321000C38E3 /* wrapper.cpp in Sources */,
+				A4A42BC6251B83D000BA5256 /* decomposition.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -255,6 +301,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/clang/include,
+					/usr/local/llvm/include,
+				);
 				LD_RUNPATH_SEARCH_PATHS = /usr/local/clang/lib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -264,6 +314,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/clang/include,
+					/usr/local/llvm/include,
+				);
 				LD_RUNPATH_SEARCH_PATHS = /usr/local/clang/lib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

@@ -52,11 +52,19 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "/opt/local/ts3d/HOOPS_Exchange_Publish_2020_U1"
+            argument = "--exchange /opt/local/ts3d/HOOPS_Exchange_Publish_2020_SP2_U2"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "/opt/local/ts3d/Foo.h"
+            argument = "--csharp_folder &quot;/Users/brad.flubacher/Documents/GitHub/ExchangeSharp/ExchangeSharp/Direct&quot;"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--raii &quot;/Users/ts3d/Documents/GitHub/ExchangeToolkit/ExchangeToolkit/include/raii.h&quot;"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--config &quot;/Users/ts3d/Documents/GitHub/ExchangeToolkit/build/parser/config.json&quot;"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

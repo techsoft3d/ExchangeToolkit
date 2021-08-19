@@ -1,0 +1,226 @@
+{
+	"type_enums_to_ignore" : [
+		"kA3DTypeEntity",
+		"kA3DTypeUTF8Char",
+		"kA3DTypeVector2dData",
+		"kA3DTypeVector3dData",
+		"kA3DTypeCrossingPointsCrvIntersectionData",
+		"kA3DTypeGraphics"
+	],
+	"type_enums_to_assume_exist" : [
+		"kA3DTypeTopoVertex",
+		"kA3DTypeMkpAnnotationEntity",
+		"kA3DTypeMiscTransformation",
+		"kA3DTypeFrmParameter"
+	],
+	"wrappers_to_skip" : [
+		"A3DMiscCascadedAttributesData",
+		"A3DMkpRTFFieldData"
+	],
+	"fields_to_skip" : [
+		"A3DAsmProductOccurrenceData::m_pPrototype",
+		"A3DAsmProductOccurrenceData::m_pExternalData",
+		"A3DGraphVPicturePatternData::m_pMarkupTess",
+		"A3DGraphTextureDefinitionData::m_pTextureTransfo",
+		"A3DGraphTextureDefinitionData::m_pOperatorTransfo"
+
+	],
+    "array_sizes" : [
+        {
+            "A3DRootBaseData" : [
+                {
+                    "m_ppAttributes" : "m_uiSize"
+                }
+            ],
+            "A3DMathFct1DCombinationData" : [
+                {
+                    "m_ppFunctions" : "m_uiSize",
+                    "m_pdCoeffs" : "m_uiSize"
+                }
+            ],
+            "A3DMathFct1DPolynomData" : [
+                {
+                    "m_pdCoeffs" : "m_uiSize"
+                }
+            ],
+            "A3DTopoShellData" : [
+                {
+                    "m_pucOrientationWithShell" : "m_uiFaceSize"
+                }
+            ],
+            "A3DMiscAttributeUnitData" : [
+                {
+                    "m_ppBasicUnits" : "m_uiBasicUnitSize"
+                }
+            ],
+            "A3DMDMarkupLeaderStubData" : [
+                {
+                    "m_pdValues" : "m_uiValuesAndAnchorTypesSize",
+                    "m_piAnchorTypes" : "m_uiValuesAndAnchorTypesSize"
+                }
+            ],
+            "A3DSurfNurbsData" : [
+                {
+                    "m_pdWeights" : "m_uiUCtrlSize * m_uiVCtrlSize",
+                    "m_pCtrlPts"  : "m_uiUCtrlSize * m_uiVCtrlSize"
+                }
+            ],
+            "A3DCrvCompositeData" : [
+                {
+                    "m_ppCurves" : "m_uiSize",
+                    "m_pbSenses" : "m_uiSize"
+                }
+            ],
+            "A3DCrvPolyLineData" : [
+                {
+                    "m_pPts" : "m_uiSize"
+                }
+            ],
+            "A3DMDFCTolerancePerUnitData" : [
+                {
+                    "m_pdUnitAreaSecondLength" : ""
+                }
+            ],
+            "A3DRWParamsTranslateToPkPartsData" : [
+                {
+                    "m_pMapper" : ""
+                }
+            ],
+            "A3DAsmLayerFilterItemData" : [
+                {
+                    "m_puiLayerIndexes" : "m_uiSize"
+                }
+            ],
+            "A3DTransfoRepresentationItemData" : [
+                {
+                    "m_pOptPlacement" : ""
+                }
+            ],
+            "A3DCompareOutputData" : [
+                {
+                    "m_pNewFaceMatch" : "m_uiNewFaceSize",
+                    "m_pNewFace" : "m_uiNewFaceSize",
+                    "m_pOldFaceMatch" : "m_uiOldFaceSize",
+                    "m_pOldFace" : "m_uiOldFaceSize"
+                }
+            ],
+            "A3DRWParamsAssemblyData" : [
+                {
+                    "m_ppcSearchDirectories" : "m_uiSearchDirectoriesSize"
+                }
+            ],
+            "A3DMDFCProjectedZoneData" : [
+                {
+                    "m_pdPosition" : ""
+                }
+            ],
+            "A3DAsmEntityFilterItemData" : [
+                {
+                    "m_ppEntities" : "m_uiSize"
+                }
+            ],
+            "A3DSurfBlend03Data" : [
+                {
+                    "m_pdParameters" : "m_uiNbOfElement",
+                    "m_pdRail2AnglesV" : "m_uiNbOfElement",
+                    "m_pdRail2DerivativesV" : "m_uiNbOfElement",
+                    "m_pdRail2SecondDerivatives" : "m_uiNbOfElement",
+                    "m_piMultiplicities" : "m_uiNbOfElement",
+                    "m_pPositions" : "3 * m_uiNbOfElement",
+                    "m_pSecondDerivatives" : "3 * m_uiNbOfElement",
+                    "m_pTangent" : "3 * m_uiNbOfElement"
+                }
+            ],
+            "A3DMiscReferenceOnTopologyData" : [
+                {
+                    "m_puiAdditionalIndexes" : "m_uiSize"
+                }
+            ],
+            "A3DGraphPictureData" : [
+                {
+                    "m_pucBinaryData" : "m_uiSize"
+                }
+            ],
+            "A3DMiscReferenceOnTessData" : [
+                {
+                    "m_puiAdditionalIndexes" : "m_uiSize"
+                }
+            ],
+            "A3DRiPointSetData" : [
+                {
+                    "m_pPts" : "m_uiSize"
+                }
+            ],
+            "A3DThumbnailData" : [
+                {
+                    "m_pcBuffer" : "m_iLength"
+                }
+            ],
+            "A3DTopoMultipleVertexData" : [
+                {
+                    "m_pPts" : "m_uiSize"
+                }
+            ],
+            "A3DMarkupLocatorData" : [
+                {
+                    "m_sCoordinateEntitiesNotes" : "m_uiCoordinateEntitiesNotesSize",
+                    "m_sCoordinateEntitiesNotesFont" : "m_uiCoordinateEntitiesNotesSize"
+                }
+            ],
+            "A3DMarkupMeasurementPointData" : [
+                {
+                    "m_sCoordinateEntitiesNotes" : "m_uiCoordinateEntitiesNotesSize",
+                    "m_sCoordinateEntitiesNotesFont" : "m_uiCoordinateEntitiesNotesSize"
+                }
+            ],
+            "A3DCompareInputData" : [
+                {
+                    "m_pNewRiBrepModelPlacements" : "m_uiNewRiBrepModelsSize",
+                    "m_pOldRiBrepModelPlacements" : "m_uiOldRiBrepModelsSize",
+                    "m_ppNewRiBrepModels" : "m_uiNewRiBrepModelsSize",
+                    "m_ppOldRiBrepModels" : "m_uiOldRiBrepModelsSize"
+                }
+            ],
+            "A3DGraphHatchingPatternData" : [
+                {
+                    "m_psHatchLines" : "m_uiSize"
+                }
+            ],
+            "A3DHLRSectionFaceData" : [
+                {
+                    "m_puiLoopSize" : "m_uiNbLoop",
+                    "m_puiCurveIndex" : "m_uiNbLoop",
+                    "m_pbCurveOrientation" : "m_uiNbLoop"
+                }
+            ]
+        }
+    ],
+	"object_hierarchy" : [
+		{
+			"kA3DTypeRiRepresentationItem" : [
+				"kA3DTypeRiBrepModel",
+				"kA3DTypeRiCurve",
+				"kA3DTypeRiDirection",
+				"kA3DTypeRiPlane",
+				"kA3DTypeRiPointSet",
+				"kA3DTypeRiPolyBrepModel",
+				"kA3DTypeRiPolyWire",
+				"kA3DTypeRiSet",
+				"kA3DTypeRiCoordinateSystem",
+				"kA3DTypeRiCoordinateSystemItem"
+			]
+		}
+	],
+	"custom_getters" : [
+		{
+			"kA3DTypeAsmProductOccurrence" : [
+				{
+					"kA3DTypeAsmPartDefinition" : [
+						"auto const part_definition = getPartDefinition( ntt, PrototypeOption::Use );",
+	                    "return nullptr == part_definition ? EntityArray() : EntityArray( 1, part_definition );"
+					]
+				}
+			]
+		}
+	]
+}
