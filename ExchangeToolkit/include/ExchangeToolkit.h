@@ -831,7 +831,7 @@ namespace ts3d {
     /*! \brief Check if type is Ri or derived Ri type
      *  \ingroup access
      */
-    static inline bool isRepresentationItem( A3DEEntityType const &t ) {
+    inline bool isRepresentationItem( A3DEEntityType const &t ) {
         return (kA3DTypeRiRepresentationItem == t ||
                 kA3DTypeRiSet == t ||
                 kA3DTypeRiCurve == t ||
@@ -846,7 +846,7 @@ namespace ts3d {
     /*! \brief Check if type is TessBase or derived TessBase type
      *  \ingroup access
      */
-    static inline bool isTessBase( A3DEEntityType const &t ) {
+    inline bool isTessBase( A3DEEntityType const &t ) {
         return (kA3DTypeTessBase == t ||
                 kA3DTypeTess3D == t ||
                 kA3DTypeTess3DWire == t ||
@@ -856,7 +856,7 @@ namespace ts3d {
     /*! \brief Check if type is A3DMkpAnnotationEntity or derived type
         \ingroup access
      */
-    static inline bool isAnnotationEntity( A3DEEntityType const &t ) {
+    inline bool isAnnotationEntity( A3DEEntityType const &t ) {
         return (kA3DTypeMkpAnnotationItem == t ||
                 kA3DTypeMkpAnnotationSet == t ||
                 kA3DTypeMkpAnnotationReference == t);
@@ -865,7 +865,7 @@ namespace ts3d {
     /*! \brief Check if type is A3DMkpMarkup or derived type
      \ingroup access
      */
-    static inline bool isMarkup( A3DEEntityType const &t ) {
+    inline bool isMarkup( A3DEEntityType const &t ) {
         return (kA3DTypeMDPosition2D == t ||
                 kA3DTypeMDPosition3D == t ||
                 kA3DTypeMDPositionReference == t ||
@@ -889,7 +889,7 @@ namespace ts3d {
      * declare a temporary variable to the return value.
      *  \ingroup access
      */
-    static inline A3DEEntityType getEntityType( A3DEntity *ntt ) {
+    inline A3DEEntityType getEntityType( A3DEntity *ntt ) {
         auto result = kA3DTypeUnknown;
         if( nullptr != ntt ) {
             A3DEntityGetType( ntt, &result );
@@ -931,6 +931,46 @@ namespace ts3d {
         
         A3DAsmProductOccurrenceWrapper d( po );
         return d->m_uiPOccurrencesSize != 0 ? toVector( d->m_ppPOccurrences, d->m_uiPOccurrencesSize ) : (opt == PrototypeOption::Use ? getProductOccurrences( d->m_pPrototype, opt ) : EntityArray() );
+    }
+
+    static inline std::string getName( A3DEntity *ntt, PrototypeOption const &opt = PrototypeOption::Use ) {
+    	if( nullptr == ntt ) {
+    		return std::string();
+    	}
+
+        ts3d::A3DRootBaseWrapper d( ntt );
+        if( d->m_pcName || opt == PrototypeOption::DoNotUse) {
+            return d->m_pcName;
+        } 
+
+        if( kA3DTypeAsmProductOccurrence == ts3d::getEntityType( ntt ) ) {
+            ts3d::A3DAsmProductOccurrenceWrapper po_d( ntt );
+            return getName( po_d->m_pPrototype, opt );
+        }
+        
+        return std::string();
+    }
+
+    static inline A3DMiscTransformation *getLocation( A3DEntity *ntt, PrototypeOption const &opt = PrototypeOption::Use ) {
+        if( nullptr == ntt ) {
+        	return nullptr;
+        }
+
+        auto const t = ts3d::getEntityType( ntt );
+        if( kA3DTypeAsmProductOccurrence == t ) {
+	        ts3d::A3DAsmProductOccurrenceWrapper d( ntt );
+			return d->m_pLocation ? d->m_pLocation : (opt == PrototypeOption::Use ? getLocation( d->m_pPrototype, opt ) : nullptr );
+        }
+
+        if( kA3DTypeRiRepresentationItem == t ) {
+        	ts3d::A3DRiRepresentationItemWrapper d( ntt );
+        	if( nullptr != d->m_pCoordinateSystem ) {
+        		ts3d::A3DRiCoordinateSystemWrapper ri_cs_d( d->m_pCoordinateSystem );
+        		return ri_cs_d->m_pTransformation;
+        	}
+        }
+
+        return nullptr;
     }
 
     /*! \brief Obtains the unit scaling factor (units/mm)
@@ -1376,9 +1416,9 @@ namespace {
         }
         
         TypeSet possible_parents;
-        for( auto const owning_type_entry : _getterMapByType ) {
-            auto const owning_type = owning_type_entry.first;
-            for( auto const child_type_entry : owning_type_entry.second ) {
+        for( auto const &owning_type_entry : _getterMapByType ) {
+            auto const &owning_type = owning_type_entry.first;
+            for( auto const &child_type_entry : owning_type_entry.second ) {
                 if( child_type_entry.first == child_type ) {
                     possible_parents.insert( owning_type );
                     break;
@@ -1439,7 +1479,7 @@ namespace {
             for( auto const intermediate_parent_type : possible_parents ) {
                 if( intermediate_parent_type != child_type ) {
                     auto const intermediate_type_paths = getPossibleTypePaths( parent_type, intermediate_parent_type );
-                    for( auto const intermediate_type_path : intermediate_type_paths ) {
+                    for( auto const &intermediate_type_path : intermediate_type_paths ) {
                         type_paths.push_back( intermediate_type_path );
                         type_paths.back().push_back( child_type );
                     }
@@ -1515,7 +1555,7 @@ ts3d::InstancePathArray ts3d::getLeafInstances( A3DEntity *owner, A3DEEntityType
     auto const leaf_base_type = getBaseType( leaf_type );
     
     auto const possible_type_paths = getPossibleTypePaths( owner_base_type, leaf_base_type );
-    for( auto const possible_type_path : possible_type_paths ) {
+    for( auto const &possible_type_path : possible_type_paths ) {
         if( possible_type_path.empty() ) {
             continue;
         }
@@ -1584,35 +1624,6 @@ ts3d::EntityArray ts3d::getChildren( A3DEntity *owner, A3DEEntityType const &chi
 }
 
 
-namespace {
-    static inline std::string getName( A3DEntity *ntt ) {
-        ts3d::A3DRootBaseWrapper d( ntt );
-        if( d->m_pcName ) {
-            return d->m_pcName;
-        }
-
-        auto const t = ts3d::getEntityType( ntt );
-        if( kA3DTypeAsmProductOccurrence == t ) {
-            ts3d::A3DAsmProductOccurrenceWrapper po_d( ntt );
-            return getName( po_d->m_pPrototype );
-        }
-        
-        return std::string();
-    }
-
-    A3DMiscTransformation *getLocation( A3DAsmProductOccurrence *po ) {
-        if( nullptr == po ) {
-            return nullptr;
-        }
-        A3DAsmProductOccurrenceData d;
-        A3D_INITIALIZE_DATA( A3DAsmModelFileData, d );
-        A3DAsmProductOccurrenceGet( po, &d );
-        auto location = d.m_pLocation;
-        auto prototype = d.m_pPrototype;
-        A3DAsmProductOccurrenceGet( nullptr, &d );
-        return location ? location : getLocation( prototype );
-    }
-}
 
 namespace ts3d {
     class Instance;
