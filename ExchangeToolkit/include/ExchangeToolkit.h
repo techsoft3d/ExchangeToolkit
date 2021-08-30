@@ -2219,7 +2219,7 @@ namespace ts3d {
         /*! \brief Provides a list of TessLoop objects representing the
          * edge loops that bound this face.
          */
-        std::vector<TessLoop> const loops( void ) const {
+        std::vector<TessLoop> const &loops( void ) const {
             return _loops;
         }
         
