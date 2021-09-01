@@ -1,4 +1,4 @@
-#include "MeaningfulCursors.hpp"
+#include "MeaningfulCursors.h"
 #include "config.h"
 #include "traversal.h"
 
@@ -43,7 +43,7 @@ std::vector<traversal::ArrayFieldMetaData> traversal::getArrayFieldMetaData( std
         
         auto const stripped_identifier = m[1].str();
         auto const type_enum_spelling = std::string( "kA3DType" ) + stripped_identifier;
-        if( std::end( typeEnumsToIgnore ) != typeEnumsToIgnore.find( type_enum_spelling ) ) {
+        if( Config::instance().shouldIgnoreTypeEnum(type_enum_spelling) ) {
             return CXChildVisit_Continue;
         }
         
@@ -54,7 +54,7 @@ std::vector<traversal::ArrayFieldMetaData> traversal::getArrayFieldMetaData( std
         }
         
         auto const scoped_field_name = toString(clang_getTypeSpelling(clang_getCursorType(parent))) + "::" + cursor_spelling;
-        if( std::end( fieldsToSkip ) != fieldsToSkip.find( scoped_field_name ) ) {
+        if( Config::instance().shouldSkipField( scoped_field_name ) ) {
             return CXChildVisit_Continue;
         }
         

@@ -91,13 +91,18 @@ namespace ts3d {
         return !getAllFieldsMatching( cursor, std::regex( field_spelling ) ).empty();
     }
     
+    static std::string removeHungarianNotation( std::string const &field_spelling ) {
+        std::smatch base_match;
+        if( !std::regex_match( field_spelling, base_match, std::regex("^m_[a-z]+([A-Z0-9][A-Za-z0-9_]*)$") ) || base_match.size() != 2) {
+            return field_spelling;
+        }
+        
+        return base_match[1].str();
+    }
+
     static StringSet getWords( std::string const s ) {
         StringSet result;
-        std::smatch m;
-        if( std::regex_match( s, m, std::regex("^m_(ui|pp)([0-9A-Z][0-9a-zA-Z]+)") ) && m.size() == 3 ) {
-            const_cast<std::string&>(s) = m[2];
-        }
-        auto const with_spaces = std::regex_replace( s, std::regex("[0-9A-Z]"), " $&" );
+        auto const with_spaces = std::regex_replace( removeHungarianNotation( s ), std::regex("[0-9A-Z]"), " $&" );
         std::string::size_type n = 0;
         do {
             auto last_n = n;
@@ -117,6 +122,7 @@ namespace ts3d {
         } while( std::string::npos != n );
         return result;
     }
+    
     
     static double getSimilarityMetric( std::string const &a, std::string const &b ) {
         auto const a_words = getWords( a );
