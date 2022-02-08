@@ -55,7 +55,7 @@ namespace {
 		auto const o = ts3d::getPosition( d->m_sOrigin );
 		auto const x = ts3d::getVector( d->m_sXVector );
 		auto const y = ts3d::getVector( d->m_sYVector );
-		auto const z = x.cross3( y ) * mirror;
+        ts3d::VectorType const z = x.cross3( y ) * mirror;
 
 		ts3d::MatrixType result;
 		for(auto idx = 0u; idx < 4u; idx++) {
