@@ -101,8 +101,8 @@ namespace ts3d {
 			return getMatrixFromCartesian( xform );
 			break;
 		case kA3DTypeMiscGeneralTransformation:
-			break;
 			return getMatrixFromGeneralTransformation( xform );
+			break;
 		default:
 			throw std::invalid_argument( "Unexpected argument type provided" );
 			break;
